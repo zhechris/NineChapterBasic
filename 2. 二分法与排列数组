@@ -480,3 +480,30 @@ public class Solution {
         }
     }
 }
+
+39. Recover Rotated Sorted Array
+public class Solution {
+    /*
+     * @param nums: An integer array
+     * @return: nothing
+     */
+    private void reverse(List<Integer> nums, int start, int end) {
+        for (int i = start, j = end; i < j; i++, j--) {//for循环同时控制两个变量
+            int temp = nums.get(i);
+            nums.set(i, nums.get(j));
+            nums.set(j, temp);
+        }
+    }
+
+    public void recoverRotatedSortedArray(List<Integer> nums) {
+        for (int index = 0; index < nums.size() - 1; index++) {
+            if (nums.get(index) > nums.get(index + 1)) {
+                reverse(nums, 0, index);//三步反转法，很常见，是一种思路
+                reverse(nums, index + 1, nums.size() - 1);
+                reverse(nums, 0, nums.size() - 1);
+                return;
+            }
+        }
+    }
+}
+
