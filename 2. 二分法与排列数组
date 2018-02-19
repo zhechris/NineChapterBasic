@@ -417,3 +417,66 @@ public class Solution {
     }
 }
 
+65. Median of two Sorted Arrays
+public class Solution {
+    /*
+     * @param A: An integer array
+     * @param B: An integer array
+     * @return: a double whose format is *.5 or *.0
+     */
+    public double findMedianSortedArrays(int[] A, int[] B) {
+        // write your code here
+        int n = A.length;
+        int m = B.length;
+        if ((m + n) % 2 == 1) {
+            return helper(A, 0, B, 0, (n + m) / 2);
+        } else {
+            return (helper(A, 0, B, 0, (n + m) / 2) 
+                    + helper(A, 0, B, 0, (n + m) / 2 - 1)) / 2; 
+        }
+    }
+    
+    private double helper(int[] A, int startA, int[] B, int startB, int k) {
+        //find the element with index k in the merged array
+        if (k == 0) {
+            if (startA == A.length) {
+                return B[startB];
+            }
+            if (startB == B.length) {
+                return A[startA];
+            }
+            if (A[startA] > B[startB]) {
+                return B[startB];
+            } else {
+                return A[startA];
+            }
+        }
+        
+        if (k == 1) {
+            if (startA == A.length) {
+                return B[startB + 1];
+            }
+            if (startB == B.length) {
+                return A[startA + 1];
+            }
+            if (A[startA] > B[startB]) {
+                return helper(A, startA, B, startB + 1, 0);
+            } else {
+                return helper(A, startA + 1, B, startB, 0);
+            }
+        }
+        
+        int mid = k / 2;
+        if (startA + mid  >= A.length) {
+            return helper(A, startA, B, startB + mid, k - mid);
+        }
+        if (startB + mid  >= B.length) {
+            return helper(A, startA + mid, B, startB, k - mid);
+        }
+        if (A[startA + mid] > B[startB + mid]) {//B的前一半不够，所以不要前一半了
+            return helper(A, startA, B, startB + mid, k - mid);
+        } else {
+            return helper(A, startA + mid, B, startB, k - mid);
+        }
+    }
+}
