@@ -411,3 +411,236 @@ public class Solution {
     }
 }
 
+70. Binary Tree Level Order Traversal II
+//和上题目一模一样，最后加个Collections.reverse();
+
+71. Binary Tree Zigzag Level Order Traversal
+//添加一个bool值判断是否需要reverse
+/**
+ * Definition of TreeNode:
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left, right;
+ *     public TreeNode(int val) {
+ *         this.val = val;
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+
+
+public class Solution {
+    /*
+     * @param root: A Tree
+     * @return: A list of lists of integer include the zigzag level order traversal of its nodes' values.
+     */
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        // write your code here
+        List<List<Integer>> res = new ArrayList<>();
+        Queue<TreeNode> queue = new LinkedList<>();
+        
+        if(root == null){
+            return res;
+        }
+        boolean reverse = false;
+        queue.offer(root);
+        while(!queue.isEmpty()){
+            List<Integer> level = new ArrayList<>();
+            int size = queue.size();
+            for(int i = 0; i < size; i++){
+                TreeNode temp = queue.poll();
+                level.add(temp.val);
+                if(temp.left != null){
+                    queue.offer(temp.left);
+                }
+                if(temp.right != null){
+                    queue.offer(temp.right);
+                }
+            }
+            if(reverse){
+                Collections.reverse(level);
+            }
+            reverse = !reverse;
+            res.add(level);
+            
+        }
+        return res;
+    }
+}
+
+Binary Tree BFS Template
+public class Solution {
+    public ArrayList<ArrayList<Integer>> levelOrder(TreeNode root) {
+        ArrayList result = new ArrayList();
+        
+        if (root == null)
+            return result;
+            
+        Queue<TreeNode> queue = new LinkedList<TreeNode>();
+        queue.offer(root);
+        
+        while (!queue.isEmpty()) {
+            ArrayList<Integer> level = new ArrayList<Integer>();
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                TreeNode head = queue.poll();
+                level.add(head.val);
+                if (head.left != null)
+                    queue.offer(head.left);
+                if (head.right != null)
+                    queue.offer(head.right);
+            }
+            result.add(level);
+        }
+        
+        return result;
+    }
+}
+
+95. Validate Binary Search Tree
+//分治法，但是这个题目有陷阱，左边所有数都要小于右边的数
+public class Solution {
+    /*
+     * @param root: The root of binary tree.
+     * @return: True if the binary tree is BST, or false
+     */
+    public boolean isValidBST(TreeNode root) {  
+        ArrayList<Integer> pre = new ArrayList<Integer>();  
+        pre.add(null);  
+        return helper(root, pre);  
+    }  
+    private boolean helper(TreeNode root, ArrayList<Integer> pre) {  
+        if(root == null)  
+            return true; 
+        
+        boolean left = helper(root.left,pre); 
+        
+        if(pre.get(pre.size()-1)!=null && root.val<=pre.get(pre.size()-1))  
+            return false;  
+        pre.add(root.val);  
+        
+        boolean right = helper(root.right,pre);
+        return left && right;  
+    }
+}
+
+11. Search Range in Binary Search Tree
+public class Solution {
+    /*
+     * @param root: param root: The root of the binary search tree
+     * @param k1: An integer
+     * @param k2: An integer
+     * @return: return: Return all keys that k1<=key<=k2 in ascending order
+     */
+    public List<Integer> searchRange(TreeNode root, int k1, int k2) {
+        // write your code here
+        List<Integer> res = new ArrayList<>();
+        helper(root, k1, k2, res);
+        return res;
+    }
+    public void helper(TreeNode root, int k1, int k2, List<Integer> res) {
+        if (root == null) {
+            return;
+        }
+        if (root.val > k1) {
+            helper(root.left, k1, k2, res);
+        }
+        if (root.val >= k1 && root.val <= k2) {
+            res.add(root.val);
+        }
+        if (root.val < k2) {
+            helper(root.right, k1, k2, res);
+        }
+    }
+}
+
+Inorder Successor in BST
+TreeNode inorderSuccessor(TreeNode root, TreeNode p) {  
+        if(root == null || p == null) 
+            return NULL;  
+        TreeNode ans = NULL;  
+        while(root != null)  
+        {  
+            if(root.val > p.val)  
+            {  
+                ans = root;  
+                root = root->left;  
+            }  
+            else 
+                root = root->right;  
+        }  
+        return ans;  
+    }  
+    
+86. Binary Search Tree Iterator
+//hashmap的思维由值获取node很好
+public class BSTIterator {
+    //@param root: The root of binary tree.
+    ArrayList<Integer> inOrder;
+    HashMap<Integer, TreeNode> map;
+    int index = 0;
+    public BSTIterator(TreeNode root) {
+        // write your code here
+        inOrder = new ArrayList<>();
+        map = new HashMap<>();
+        dfs(root);
+    }
+
+    //@return: True if there has next node, or false
+    public boolean hasNext() {
+        // write your code here
+        return index < inOrder.size();
+    }
+    
+    //@return: return next node
+    public TreeNode next() {
+        // write your code here
+        int val = inOrder.get(index);
+        index++;
+        return map.get(val);
+    }
+    
+    private void dfs(TreeNode node){
+        if(node == null) return;
+        dfs(node.left);
+        inOrder.add(node.val);
+        map.put(node.val, node);
+        dfs(node.right);
+    }
+}
+
+85. Insert Node in a Binary Search Tree
+/**
+ * Definition of TreeNode:
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left, right;
+ *     public TreeNode(int val) {
+ *         this.val = val;
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+
+
+public class Solution {
+    /*
+     * @param root: The root of the binary search tree.
+     * @param node: insert this node into the binary search tree
+     * @return: The root of the new binary search tree.
+     */
+    public TreeNode insertNode(TreeNode root, TreeNode node) {
+        // write your code here
+        if (root == null) {
+            return node;
+        }
+        if (root.val > node.val) {
+            root.left = insertNode(root.left, node);
+        } else {
+            root.right = insertNode(root.right, node);
+        }
+        return root;
+    }
+}
+
+87. Remove Node in Binary Search Tree
