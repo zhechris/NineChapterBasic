@@ -230,3 +230,137 @@ public class Solution {
         return Math.max(left, right) + 1;
     }
 }
+
+88. Lowest Common Ancestor
+/**
+ * Definition of TreeNode:
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left, right;
+ *     public TreeNode(int val) {
+ *         this.val = val;
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+
+
+public class Solution {
+    /*
+     * @param root: The root of the binary search tree.
+     * @param A: A TreeNode in a Binary.
+     * @param B: A TreeNode in a Binary.
+     * @return: Return the least common ancestor(LCA) of the two nodes.
+     */
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode A, TreeNode B) {
+        // write your code here
+        if(root == null || root == A || root == B){
+            return root;
+        }
+        
+        TreeNode left = lowestCommonAncestor(root.left, A, B);
+        TreeNode right = lowestCommonAncestor(root.right, A, B);
+        
+        if(left != null && right != null){
+            return root;
+        }
+        if(left != null){
+            return left;
+        }
+        if(right != null){
+            return right;
+        }
+        return null;
+    }
+}
+
+94. Binary Tree Maximum Path Sum
+/**
+ * Definition of TreeNode:
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left, right;
+ *     public TreeNode(int val) {
+ *         this.val = val;
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+
+//注意，这道题包括了三个考点
+/* 1. root->leaf(可以不包含)
+   2. root->anynode(至少一个点)
+   3. anynode->anynode(至少一个点)
+*/
+public class Solution {
+    private class ResultType {
+        // singlePath: 从root往下走到任意点的最大路径，这条路径至少包含一个点
+        // maxPath: 从树中任意到任意点的最大路径，这条路径至少包含一个点
+        //包括一个点Mathmax(0, Math.max(left.singlePath, right.singlePath)) + root.val;
+        //不包括点Mathmax(0, Math.max(left.singlePath, right.singlePath) + root.val);
+        int singlePath, maxPath; 
+        ResultType(int singlePath, int maxPath) {
+            this.singlePath = singlePath;
+            this.maxPath = maxPath;
+        }
+    }
+
+    private ResultType helper(TreeNode root) {
+        if (root == null) {//小技巧：一般求最大出现特殊情况赋值最小
+            return new ResultType(Integer.MIN_VALUE, Integer.MIN_VALUE);
+        }
+        // Divide
+        ResultType left = helper(root.left);
+        ResultType right = helper(root.right);
+
+        // Conquer
+        int singlePath =
+            Math.max(0, Math.max(left.singlePath, right.singlePath)) + root.val;
+
+        int maxPath = Math.max(left.maxPath, right.maxPath);//左子树最大或者右子树最大
+        //或者包括根节点横跨左右子树
+        maxPath = Math.max(maxPath, Math.max(left.singlePath, 0) + Math.max(right.singlePath, 0) + root.val);
+        return new ResultType(singlePath, maxPath);
+    }
+
+    public int maxPathSum(TreeNode root) {
+        ResultType result = helper(root);
+        return result.maxPath;
+    }
+}
+
+Binary Tree DFS template
+Template 1: Traverse
+
+public class Solution {
+    public void traverse(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        // do something with root
+        traverse(root.left);
+        // do something with root
+        traverse(root.right);
+        // do something with root
+    }
+}
+
+
+Tempate 2: Divide & Conquer
+
+public class Solution {
+    public ResultType traversal(TreeNode root) {
+        // null or leaf
+        if (root == null) {
+            // do something and return;
+        }
+        
+        // Divide
+        ResultType left = traversal(root.left);
+        ResultType right = traversal(root.right);
+        
+        // Conquer
+        ResultType result = Merge from left and right.
+        return result;
+    }
+}
