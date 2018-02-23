@@ -14,7 +14,7 @@ public class Solution {
             isPalindrome[i][i + 1] = (s.charAt(i) == s.charAt(i + 1));
         }
 //(start (start+1                    i-1)    i)
-        for (int i = 2; i < s.length(); i++) {
+        for (int i = 2; i < s.length(); i++) {//区间型动态规划，背下来。外层长度，内层起点
             for (int start = 0; start + i < s.length(); start++) {
                 isPalindrome[start][start + i]
                     = isPalindrome[start + 1][start + i - 1] && s.charAt(start) == s.charAt(start + i);
