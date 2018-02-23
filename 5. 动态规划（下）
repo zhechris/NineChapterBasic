@@ -1,0 +1,103 @@
+108. Palindrome Partitioning II
+public class Solution {
+    /**
+     * @param s: A string
+     * @return: An integer
+     */
+    private boolean[][] getIsPalindrome(String s) {
+        boolean[][] isPalindrome = new boolean[s.length()][s.length()];
+
+        for (int i = 0; i < s.length(); i++) {
+            isPalindrome[i][i] = true;
+        }
+        for (int i = 0; i < s.length() - 1; i++) {
+            isPalindrome[i][i + 1] = (s.charAt(i) == s.charAt(i + 1));
+        }
+//(start (start+1                    i-1)    i)
+        for (int i = 2; i < s.length(); i++) {
+            for (int start = 0; start + i < s.length(); start++) {
+                isPalindrome[start][start + i]
+                    = isPalindrome[start + 1][start + i - 1] && s.charAt(start) == s.charAt(start + i);
+            }
+        }
+
+        return isPalindrome;
+    }
+
+    public int minCut(String s) {
+        if (s == null || s.length() == 0) {
+            return 0;
+        }
+
+        // preparation
+        boolean[][] isPalindrome = getIsPalindrome(s);//把所有长度的是不是回文串都存起来，表示i-j段是否为回文串
+        
+        // initialize
+        int[] f = new int[s.length() + 1];
+        for (int i = 0; i <= s.length(); i++) {
+            f[i] = i - 1;
+        }
+        
+        // main
+        for (int i = 1; i <= s.length(); i++) {
+            f[i] = Integer.MAX_VALUE; // or f[i] = i
+            for (int j = 0; j < i; j++) {
+                if (isPalindrome[j][i - 1]) {//前j段和j到i-1段都是回文串
+                    f[i] = Math.min(f[i], f[j] + 1);
+                }
+            }
+        }
+
+        return f[s.length()];
+    }
+    
+    // public boolean isPalindorme(String s, int start, int end){
+    //     for(int i = start, j = end; i < j; i++, j--){
+    //         if(s.charAt(i) != s.charAt(j)){
+    //             return false;
+    //         }
+    //     }
+    //     return true;
+    // }
+    
+}
+
+107. Word Break
+public class Solution {
+    /*
+     * @param s: A string
+     * @param dict: A dictionary of words dict
+     * @return: A boolean
+     */
+    public boolean wordBreak(String s, Set<String> dict) {
+        // write your code here
+        int maxLength = getMaxLength(dict);
+        
+        // 长度为n的单词 有n + 1个切割点 比如: _l_i_n_t_
+        boolean[] canBreak = new boolean[s.length() + 1];
+        // 当s长度为0时
+        canBreak[0] = true;
+        
+        for(int i = 1; i < canBreak.length; i++){
+            for(int j = 1; j <= maxLength && j <= i; j++){
+              //i - j 表示从 i 点开始往前j个点的位置
+              String str = s.substring(i - j,i);
+              //如果此str在词典中 并且 str之前的 字符串可以拆分     
+              if(dict.contains(str) && canBreak[i - j]){
+                  canBreak[i] = true;
+                  break;
+              }
+            }
+        }
+        
+        return canBreak[canBreak.length - 1];
+    }
+    //这个函数如果写进主函数会超时
+    private int getMaxLength(Set<String> dict){
+        int max = 0;
+        for(String s : dict){
+            max = Math.max(max,s.length());
+        }
+        return max;
+    }
+}
