@@ -101,3 +101,167 @@ public class Solution {
         return max;
     }
 }
+
+77. Longest Common Subsequence
+public class Solution {
+    /**
+     * @param A: A string
+     * @param B: A string
+     * @return: The length of longest common subsequence of A and B
+     */
+    public int longestCommonSubsequence(String A, String B) {
+        // write your code here
+        int n = A.length();
+        int m = B.length();
+        int f[][] = new int[n + 1][m + 1];
+        for(int i = 1; i <= n; i++){
+            for(int j = 1; j <= m; j++){
+                if(A.charAt(i - 1) == B.charAt(j - 1)){
+                    f[i][j] = f[i - 1][j - 1] + 1;
+                } else{
+                    f[i][j] = Math.max(f[i - 1][j], f[i][j - 1]);
+            
+                }
+            }
+        }
+        return f[n][m];
+    }
+}
+
+79. Longest Common Substring
+public class Solution {
+    /**
+     * @param A, B: Two string.
+     * @return: the length of the longest common substring.
+     */
+    public int longestCommonSubstring(String A, String B) {
+        // state: f[i][j] is the length of the longest lcs
+        // ended with A[i - 1] & B[j - 1] in A[0..i-1] & B[0..j-1]
+        int n = A.length();
+        int m = B.length();
+        int[][] f = new int[n + 1][m + 1];
+        
+        // initialize: f[i][j] is 0 by default
+        
+        // function: f[i][j] = f[i - 1][j - 1] + 1 or 0
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= m; j++) {
+                if (A.charAt(i - 1) == B.charAt(j - 1)) {
+                    f[i][j] = f[i - 1][j - 1] + 1;
+                } else {
+                    f[i][j] = 0;
+                }
+            }
+        }
+        
+        // answer: max{f[i][j]}
+        int max = 0;
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= m; j++) {
+                max = Math.max(max, f[i][j]);
+            }
+        }
+        
+        return max;
+    }
+}
+
+119. Edit Distance
+public class Solution {
+    /**
+     * @param word1: A string
+     * @param word2: A string
+     * @return: The minimum number of steps.
+     */
+    public int minDistance(String word1, String word2) {
+        // write your code here
+        
+        int n = word1.length();
+        int m = word2.length();
+        
+        int[][] dp = new int[n+1][m+1];
+        for(int i=0; i< m+1; i++){
+            dp[0][i] = i; 
+        }
+        for(int i=0; i<n+1; i++){
+            dp[i][0] = i;
+        }
+        
+        
+        for(int i = 1; i<n+1; i++){
+            for(int j=1; j<m+1; j++){
+                if(word1.charAt(i-1) == word2.charAt(j-1)){
+                    dp[i][j] = dp[i-1][j-1];
+                }else{
+                    dp[i][j] = 1 + Math.min(dp[i-1][j-1],Math.min(dp[i-1][j],dp[i][j-1]));
+                                           //replace              delete      insert
+                }
+            }
+        }
+        return dp[n][m];
+    }
+}
+
+118. Distinct Subsequences
+public class Solution {
+    /*
+     * @param : A string
+     * @param : A string
+     * @return: Count the number of distinct subsequences
+     */
+    public int numDistinct(String S, String T) {
+        // write your code here
+        if (S == null || T == null) {
+            return 0;
+        }
+
+        int[][] nums = new int[S.length() + 1][T.length() + 1];
+
+        for (int i = 0; i <= S.length(); i++) {
+            nums[i][0] = 1;
+        }
+        for (int i = 1; i <= S.length(); i++) {
+            for (int j = 1; j <= T.length(); j++) {
+                
+                if (S.charAt(i - 1) == T.charAt(j - 1)) {
+                    nums[i][j] = nums[i - 1][j] + nums[i - 1][j - 1];
+                } else {
+                    nums[i][j] = nums[i - 1][j];
+                }
+            }
+        }
+        return nums[S.length()][T.length()];
+    }
+}
+
+29. Interleaving String
+public class Solution {
+    public boolean isInterleave(String s1, String s2, String s3) {
+        if (s1.length() + s2.length() != s3.length()) {
+            return false;
+        }
+        
+        boolean [][] interleaved = new boolean[s1.length() + 1][s2.length() + 1];
+        interleaved[0][0] = true;
+        
+        for (int i = 1; i <= s1.length(); i++) {
+            if(s3.charAt(i - 1) == s1.charAt(i - 1) && interleaved[i - 1][0])
+                interleaved[i][0] = true;
+        }
+        
+        for (int j = 1; j <= s2.length(); j++) {
+            if(s3.charAt(j - 1) == s2.charAt(j - 1) && interleaved[0][j - 1])
+                interleaved[0][j] = true;
+        }
+        
+        for (int i = 1; i <= s1.length(); i++) {
+            for (int j = 1; j <= s2.length(); j++) {
+                if(((s3.charAt(i + j - 1) == s1.charAt(i - 1) && interleaved[i - 1][j]))
+                    || ((s3.charAt(i + j - 1)) == s2.charAt(j - 1) && interleaved[i][j - 1]))
+                interleaved[i][j] = true;
+            }
+        }
+        
+        return interleaved[s1.length()][s2.length()];
+    }
+}
