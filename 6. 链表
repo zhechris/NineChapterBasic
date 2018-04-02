@@ -1,1 +1,95 @@
+113. Remove Duplicates from Sorted List II
+public class Solution {
+    /**
+     * @param head: head is the head of the linked list
+     * @return: head of the linked list
+     */
+    public ListNode deleteDuplicates(ListNode head) {
+        // write your code here
+        if(head == null || head.next == null){
+            return head;
+        }
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        head = dummy;
+        while(head.next != null && head.next.next !=null){
+            if(head.next.val == head.next.next.val){
+                int val = head.next.val;
+                while(head.next != null && head.next.val == val){
+                    head.next = head.next.next;
+                }
+            }else{
+                head = head.next;
+            }
+        }
+        return dummy.next;
+    }
+}
+
+36. Reverse Linked List II
+//这种题目就是头尾先不管 中间操作好以后 补上头尾
+public class Solution {
+    public ListNode reverseBetween(ListNode head, int m, int n) {
+        if (m >= n || head == null) {
+            return head;
+        }
+        
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        head = dummy;
+        
+        for (int i = 1; i < m; i++) {
+            if (head == null) {
+                return null;
+            }
+            head = head.next;//指针挪到m-1这个点
+        }
+        
+        ListNode premNode = head;//m-1
+        ListNode mNode = head.next;
+        ListNode nNode = mNode, postnNode = mNode.next;
+        for (int i = m; i < n; i++) {//一直移动到curt=n+1，pre=n-1
+            if (postnNode == null) {
+                return null;
+            }
+            ListNode temp = postnNode.next;
+            postnNode.next = nNode;//postn相当于curt，n相当于pre
+            nNode = postnNode;//移动
+            postnNode = temp;//移动
+        }
+        mNode.next = postnNode;//m指向n+1，m-1指向n
+        premNode.next = nNode;
+        
+        return dummy.next;
+    }
+}
+
+96. Partition List
+//左右两个指针，值得学习，链表题目，一定要想到双指针之类的
+public class Solution {
+    public ListNode partition(ListNode head, int x) {
+        if (head == null) {
+            return null;
+        }
+        
+        ListNode leftDummy = new ListNode(0);
+        ListNode rightDummy = new ListNode(0);
+        ListNode left = leftDummy, right = rightDummy;
+        
+        while (head != null) {
+            if (head.val < x) {
+                left.next = head;
+                left = head;
+            } else {
+                right.next = head;
+                right = head;
+            }
+            head = head.next;
+        }
+        
+        right.next = null;
+        left.next = rightDummy.next;
+        return leftDummy.next;
+    }
+}
 
