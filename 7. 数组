@@ -179,3 +179,130 @@ public class Solution {
         }
     }
 }
+
+149. Best Time to Buy and Sell Stock
+public class Solution {
+    public int maxProfit(int[] prices) {
+        if (prices == null || prices.length == 0) {
+            return 0;
+        }
+
+        int min = Integer.MAX_VALUE;  //just remember the smallest price
+        int profit = 0;
+        for (int i : prices) {//单层循环就可以解决的问题 不要用两层循环
+            min = i < min ? i : min;
+            profit = (i - min) > profit ? i - min : profit;
+        }
+
+        return profit;
+    }
+}
+
+150. Best Time to Buy and Sell Stock II
+public class Solution {
+    /**
+     * @param prices: Given an integer array
+     * @return: Maximum profit
+     */
+    public int maxProfit(int[] prices) {
+        // write your code here
+        if(prices == null || prices.length == 0){
+            return 0;
+        }
+        //greedy
+        int profit = 0;
+        for (int i = 0; i < prices.length - 1; i++) {
+            int diff = prices[i+1] - prices[i];
+            if (diff > 0) {
+                profit += diff;
+            }
+        }
+        return profit;
+    }
+}
+
+151. Best Time to Buy and Sell Stock III
+public class Solution {
+    /**
+     * @param prices: Given an integer array
+     * @return: Maximum profit
+     */
+    public int maxProfit(int[] prices) {
+        // write your code here
+        if(prices == null || prices.length ==0){
+            return 0;
+        }
+        
+        int [] left = new int[prices.length];
+        int [] right = new int[prices.length];
+        //寻找一条分割线，左边找一次利润最大值，右边找一次利润最大值，左右寻找方式和I 相似
+        int min = prices[0];
+        left[0] = 0;
+        for(int i = 1; i < prices.length; i++){
+            min = Math.min(prices[i], min);
+            left[i] = Math.max(left[i - 1], prices[i] - min); 
+         }
+         
+        right[prices.length - 1] = 0;
+        int max = prices[prices.length - 1];
+        for (int i = prices.length - 2; i >= 0; i--) {
+            max = Math.max(prices[i], max);
+            right[i] = Math.max(right[i + 1], max - prices[i]);
+        }
+
+        int profit = 0;
+        for (int i = 0; i < prices.length; i++){
+            profit = Math.max(left[i] + right[i], profit);  
+        }
+        return profit;
+    }
+}
+
+393. Best Time to Buy and Sell Stock IV 
+class Solution {
+    /**
+     * @param k: An integer
+     * @param prices: Given an integer array
+     * @return: Maximum profit
+     */
+    public int maxProfit(int k, int[] prices) {
+        // write your code here
+        if (k == 0) {
+            return 0;
+        }
+        if (k >= prices.length / 2) {
+            int profit = 0;
+            for (int i = 1; i < prices.length; i++) {
+                if (prices[i] > prices[i - 1]) {
+                    profit += prices[i] - prices[i - 1];
+                }
+            }
+            return profit;
+        }
+        int n = prices.length;
+        int[][] mustsell = new int[n + 1][n + 1];   // mustSell[i][j] 表示前i天，至多进行j次交易，第i天必须sell的最大获益
+        int[][] globalbest = new int[n + 1][n + 1];  // globalbest[i][j] 表示前i天，至多进行j次交易，第i天可以不sell的最大获益
+        
+        mustsell[0][0] = globalbest[0][0] = 0;
+        for (int i = 1; i <= k; i++) {
+            mustsell[0][i] = globalbest[0][i] = 0;
+        }
+        
+        for (int i = 1; i < n; i++) {
+            int gainorlose = prices[i] - prices[i - 1];
+            mustsell[i][0] = 0;
+            for (int j = 1; j <= k; j++) {
+                /*global[i][j] = max(local[i][j], global[i-1][j]) 
+上述方程比较两个量的大小：①当前局部最大值；②过往全局最大值。 
+local[i][j] = max(global[i-1][j-1] + max(diff, 0), local[i-1][j] + diff) 
+上述方程比较两个量的大小： 
+①全局到i-1天进行j-1次交易，然后加上今天的交易（如果今天的交易赚钱的话）。 
+②取局部第i-1天进行j次交易，然后加上今天的差值（local[i-1][j]是第i-1天卖出的交易，它加上diff后变成第i天卖出，并不会增加交易次数。无论diff是正还是负都要加上，否则就不满足local[i][j]必须在最后一天卖出的条件了）*/
+                mustsell[i][j] = Math.max(globalbest[(i - 1)][j - 1] + Math.max(gainorlose, 0), 
+                                            mustsell[(i - 1)][j] + gainorlose);
+                globalbest[i][j] = Math.max(globalbest[(i - 1)][j], mustsell[i ][j]);
+            }
+        }
+        return globalbest[(n - 1)][k];
+    }
+}
