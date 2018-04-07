@@ -378,4 +378,492 @@ public class Solution {
     }
 }
 
+43. Maximum Subarray III
+public class Solution {
+    /**
+     * @param nums: A list of integers
+     * @param k: An integer denote to find k non-overlapping subarrays
+     * @return: An integer denote the sum of max k non-overlapping subarrays
+     */
+    public int maxSubArray(int[] nums, int k) {
+        if (nums.length < k) {
+            return 0;
+        }
+        int len = nums.length;
+        
+       
+        int[][] globalMax = new int[k + 1][len + 1];//前i个元素划分成j个subarray
+        int[][] localMax = new int[k + 1][len + 1];
+        
+        for (int i = 1; i <= k; i++) {
+            localMax[i][i-1] = Integer.MIN_VALUE;
+            //小于 i 的数组不能够partition
+            for (int j = i; j <= len; j++) {
+                localMax[i][j] = Math.max(localMax[i][j-1], globalMax[i - 1][j-1]) + nums[j-1];
+                if (j == i)
+                    globalMax[i][j] = localMax[i][j];
+                else
+                    globalMax[i][j] = Math.max(globalMax[i][j-1], localMax[i][j]);
+            }
+        }
+        return globalMax[k][len];
+    }
+    
+}
 
+44. Minimum Subarray
+public class Solution {
+    /*
+     * @param nums: a list of integers
+     * @return: A integer indicate the sum of minimum subarray
+     */
+    public int minSubArray(List<Integer> nums) {
+        // write your code here
+        if(nums == null || nums.size() == 0){
+            return 0;
+        }
+        
+        int sum = 0;
+        int maxsum = 0;
+        int min = Integer.MAX_VALUE;
+        for(int i = 0; i < nums.size(); i++){
+            sum += nums.get(i);
+            min = Math.min(min, sum - maxsum);
+            maxsum = Math.max(maxsum, sum);
+        }
+        return min;
+    }
+}
+
+45. Maximum Subarray Difference
+public class Solution {
+    /**
+     * @param nums: A list of integers
+     * @return: An integer indicate the value of maximum difference between two
+     *          Subarrays
+     */
+    public int maxDiffSubArrays(int[] nums) {
+        // write your code here
+        int size = nums.length;
+        int[] left_max = new int[size];
+        int[] left_min = new int[size];
+        int[] right_max = new int[size];
+        int[] right_min = new int[size];
+        int[] copy = new int[size];
+        /*Get negative copy*/
+        for(int i = 0; i < size; i++){
+            copy[i] = -1 * nums[i];
+        }
+        int max = Integer.MIN_VALUE;
+        int sum = 0;
+        int minSum = 0;
+        /*Forward: get max subarray*/
+        for(int i = 0; i < size; i++){
+            sum += nums[i];
+            max = Math.max(max, sum - minSum);
+            minSum = Math.min(sum, minSum);
+            left_max[i] = max;
+        }
+        /*Backward: get max subarray*/
+        max = Integer.MIN_VALUE;
+        sum = 0;
+        minSum = 0;
+        for(int i = size - 1; i >= 0; i--){
+            sum += nums[i];
+            max = Math.max(max, sum - minSum);
+            minSum = Math.min(sum, minSum);
+            right_max[i] = max;
+        }
+        /*Forward: get min subarray*/
+        max = Integer.MIN_VALUE;
+        sum = 0;
+        minSum = 0;
+        for(int i = 0; i < size; i++){
+            sum += copy[i];
+            max = Math.max(max, sum - minSum);
+            minSum = Math.min(sum, minSum);
+            left_min[i] = -1 * max;
+        }
+        /*Backward: get min subarray*/
+        max = Integer.MIN_VALUE;
+        sum = 0;
+        minSum = 0;
+        for(int i = size - 1; i >= 0; i--){
+            sum += copy[i];
+            max = Math.max(max, sum - minSum);
+            minSum = Math.min(sum, minSum);
+            right_min[i] = -1 * max;
+        }
+        //左右分割，左边找一个小的，右边找一个大的，或者，右边找一个小的，左边找一个大的
+        int diff = 0;
+        for(int i = 0; i < size - 1; i++){
+            diff = Math.max(diff, Math.abs(left_max[i] - right_min[i + 1]));
+            diff = Math.max(diff, Math.abs(left_min[i] - right_max[i + 1]));
+        }
+        return diff;
+    }
+}
+
+138. Subarray Sum
+public class Solution {
+    /**
+     * @param nums: A list of integers
+     * @return: A list of integers includes the index of the first number
+     *          and the index of the last number
+     */
+    public ArrayList<Integer> subarraySum(int[] nums) {
+        // write your code here
+       
+        int len = nums.length;
+       
+        ArrayList<Integer> ans = new ArrayList<Integer>();
+        HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+       
+        map.put(0, -1);
+       
+        int sum = 0;
+        for (int i = 0; i < len; i++) {
+            sum += nums[i];
+           
+            if (map.containsKey(sum)) {
+                ans.add(map.get(sum) + 1);//找两个prefixsum相等的index
+                ans.add(i);
+                return ans;
+            }
+            
+            map.put(sum, i);
+        }
+       
+        return ans;
+    }
+}
+
+139. Subarray Sum Closest
+//这道题延续Subarray Sum的思路，即将[0, i]的sum存起来。这里构造了一个新的类，Pair。
+//一方面存sum值，一方面存index。然后根据sum值排序，算相邻sum值的差值。差值最小的即为结果。时间复杂度是O(nlogn)，空间复杂度是O(n)。
+public class Solution {
+    
+    class Pair {
+        public int sum;
+        public int index;
+        public Pair(int sum, int index) {
+            this.sum = sum;
+            this.index = index;
+        }
+    }
+    /**
+     * @param nums: A list of integers
+     * @return: A list of integers includes the index of the first number 
+     *          and the index of the last number
+     */
+    public int[] subarraySumClosest(int[] nums) {
+        // write your code here
+        int[] result = new int[2];
+        if (nums == null || nums.length == 0) {
+            return result;
+        }
+        int len = nums.length;
+        int sum = 0;
+        List<Pair> list = new ArrayList<Pair>();
+        for (int i = 0; i < len; i++) {
+            sum += nums[i];
+            Pair tmp = new Pair(sum, i);
+            list.add(tmp);
+        }
+        Collections.sort(list, new Comparator<Pair>() {
+            public int compare(Pair a, Pair b) {
+                return (a.sum - b.sum);
+            }
+        });
+        int min = Integer.MAX_VALUE;
+        for (int i = 1; i < len; i++) {
+            int diff = list.get(i).sum - list.get(i - 1).sum;
+            if (diff < min) {
+                min = diff;
+                int index1 = list.get(i).index;
+                int index2 = list.get(i - 1).index; //prefixsum是一段值，是从前面的i+1开始的，所以前一个index要加1
+                if (index1 < index2) {
+                    result[0] = index1 + 1;
+                    result[1] = index2;
+                } else {
+                    result[0] = index2 + 1;
+                    result[1] = index1;
+                }
+            }
+        }
+        return result;
+    }
+}
+//以下题目都是双指针的办法
+56. Two Sum
+public class Solution {
+    /**
+     * @param numbers: An array of Integer
+     * @param target: target = numbers[index1] + numbers[index2]
+     * @return: [index1 + 1, index2 + 1] (index1 < index2)
+     */
+    public int[] twoSum(int[] numbers, int target) {
+        // write your code here
+        int result[] = new int[2];
+        if(numbers==null||numbers.length<2)
+            return result;
+        HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+        
+        for (int i = 0; i < numbers.length; i++){
+            int num = target - numbers[i];
+            if(map.containsKey(num)){
+                result[0] = map.get(num);
+                result[1] = i;
+                return result;
+            }
+            map.put(numbers[i], i);
+        }
+        return result;
+    }
+}
+
+57. 3Sum
+class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> list=new ArrayList<>();
+        if(nums.length<3||nums==null)
+            return list;
+        HashSet<ArrayList<Integer>> set=new HashSet<>();//in case the depulicate list added
+        Arrays.sort(nums);
+        for(int i=0;i<nums.length-2;i++){
+            int low=i+1;//双指针的办法
+            int high=nums.length-1;
+            while(low<high){
+                int sum=nums[i]+nums[low]+nums[high];
+                if(sum==0){
+                    ArrayList<Integer> unit=new ArrayList<>();
+                    unit.add(nums[i]);
+                    unit.add(nums[low]);
+                    unit.add(nums[high]);
+                    if(!set.contains(unit)){
+                        set.add(unit);
+                        list.add(unit);
+                    }
+                    low++;
+                    high--;
+                }
+                else if(sum>0)
+                    high--;
+                else
+                    low++;
+            }
+        }
+        return list;
+    }
+}
+
+59. 3Sum Closest
+class Solution {
+    public int threeSumClosest(int[] nums, int target) {
+        if(nums.length<3||nums==null)
+            return 0;
+        
+        int sum=0;
+        int diff=Integer.MAX_VALUE;
+        Arrays.sort(nums);
+        
+        for(int i=0;i<nums.length-2;i++){
+            int j=i+1,k=nums.length-1;
+            while(j<k){
+                int temp=nums[i]+nums[j]+nums[k];
+                if(Math.abs(target-temp)<diff){
+                    sum=temp;
+                    diff=Math.abs(target-temp);
+                }
+                if(temp==target)
+                    return target;
+                else if(temp<target)
+                    j++;
+                else
+                    k--;
+            }
+        }
+        return sum;
+    }
+}
+
+58. 4Sum
+class Solution {
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        List<List<Integer>> list=new ArrayList<>();
+        HashSet<List<Integer>> hashSet = new HashSet<>();
+        if(nums==null||nums.length<4)
+            return list;
+        Arrays.sort(nums);
+        for(int i=0;i<=nums.length-4;i++){
+           
+            for(int j=i+1;j<=nums.length-3;j++){
+                int left=j+1,right=nums.length-1;
+                while(left < right) 
+                {
+                    int sum=nums[i]+nums[j]+nums[left]+nums[right];
+                    if(sum==target){
+                            List<Integer> unit = new ArrayList<>();
+                            unit.add(nums[i]);
+                            unit.add(nums[j]);
+                            unit.add(nums[left]);
+                            unit.add(nums[right]);
+                        
+                            if (!hashSet.contains(unit)) {
+                            hashSet.add(unit);
+                            list.add(unit);
+                        }
+                            left++;
+                            right--;
+                    }
+                    else if(sum<target)
+                        left++;
+                    else 
+                        right--;
+                }
+            }
+        }
+        return list;
+    }
+}
+
+31. Partition Array
+public class Solution {
+    /** 
+     *@param nums: The integer array you should partition
+     *@param k: As description
+     *return: The index after partition
+     */
+    public int partitionArray(int[] nums, int k) {
+        if(nums == null || nums.length == 0){
+            return 0;
+        }
+        
+        int left = 0, right = nums.length - 1;
+        while (left <= right) {
+
+            while (left <= right && nums[left] < k) {
+                left++;
+            }
+
+            while (left <= right && nums[right] >= k) {
+                right--;
+            }
+
+            if (left <= right) {
+                int temp = nums[left];
+                nums[left] = nums[right];
+                nums[right] = temp;
+                
+                left++;
+                right--;
+            }
+        }
+        return left;
+    }
+}
+
+49. Sort Letters by Case
+public class Solution {
+    /** 
+     *@param chars: The letter array you should sort by Case
+     *@return: void
+     */
+    public void sortLetters(char[] chars) {
+        int i = 0, j = chars.length - 1;
+    	char tmp ;
+		while ( i <= j) {
+			while (i <= j && Character.isLowerCase(chars[i]) ) i++;
+			while (i <= j && Character.isUpperCase(chars[j]) ) j--;
+			if (i <= j) {
+				tmp = chars[i];
+				chars[i] = chars[j];
+				chars[j] = tmp;
+				i++; j--;
+			}
+		}
+        //write your code here
+		return ;
+    }
+}
+
+148. Sort Colors
+inplace的方法，背下来
+class Solution {
+    public void sortColors(int[] nums) {
+        int i = -1;
+        int j = -1;
+        int k = -1;
+        int n=nums.length;
+        for(int p = 0; p < n; p ++)
+        {
+            //根据第i个数字，挪动0~i-1串。
+            if(nums[p] == 0)
+            {
+                nums[++k] = 2;    //2往后挪
+                nums[++j] = 1;    //1往后挪
+                nums[++i] = 0;    //0往后挪
+            }
+            else if(nums[p] == 1)
+            {
+                nums[++k] = 2;
+                nums[++j] = 1;
+            }
+            else
+                nums[++k] = 2;
+        }
+    }
+}
+
+144. Interleaving Positive and Negative Numbers
+public class Solution {
+    /*
+     * @param A: An integer array.
+     * @return: nothing
+     */
+     /*O(n) time, O(1) extra space
+
+先用两根指针分成左 - 右 + 两部分, 再进行穿插
+穿插需要分情况讨论 (左 - 右 + 的前提下)
+如果 - 多, 那么从第2个数和倒数第1个数开始交换
+如果 + 多, 那么从第1个数和倒数第2个数开始交换
+如果一样多, 那么从第1个数和倒数第1个数开始交换*/
+    public void rerange(int[] A) {
+        if (A == null || A.length == 0) {
+            return;
+        }
+        int left = 0, right = A.length - 1;
+        while (left < right) {
+            if (A[left] < 0) {
+                left++;
+                continue;
+            }
+            if (A[right] > 0) {
+                right--;
+                continue;
+            }
+            int tmp = A[left];
+            A[left] = A[right];
+            A[right] = tmp;
+            left++;
+            right--;
+        }
+        if (left > A.length - left) {
+            interleave(A, 1, A.length - 1);
+        } else if (left < A.length - left) {
+            interleave(A, 0, A.length - 2);
+        } else {
+            interleave(A, 0, A.length - 1);
+        }
+    }
+    
+    private void interleave(int[] A, int start, int end) {
+        while (start < end) {
+            int tmp = A[start];
+            A[start] = A[end];
+            A[end] = tmp;
+            start += 2;
+            end -= 2;
+        }
+    }
+}
