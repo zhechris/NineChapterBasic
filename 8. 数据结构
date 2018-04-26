@@ -69,6 +69,7 @@ public class MyQueue {
 
 如何达到nlogn
 用logn的排序算法或者logn的数据结构，比如heap
+//维护一个递增的stack
 122. Largest Rectangle in Histogram 
 public class Solution {
     public int largestRectangleArea(int[] height) {
@@ -89,5 +90,221 @@ public class Solution {
         }
         
         return max;
+    }
+}
+126. Max Tree
+/**
+ * Definition of TreeNode:
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left, right;
+ *     public TreeNode(int val) {
+ *         this.val = val;
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+ //维护一个递减的stack，这道题和上道题一起总结背诵一下
+public class Solution {
+    /**
+     * @param A: Given an integer array with no duplicates.
+     * @return: The root of max tree.
+     */
+    public TreeNode maxTree(int[] A) {
+        if (A.length==0) return null;
+
+        Stack<TreeNode> nodeStack = new Stack<TreeNode>();
+        nodeStack.push(new TreeNode(A[0]));
+        for (int i=1;i<A.length;i++){
+            if (A[i]<=nodeStack.peek().val){
+                TreeNode node = new TreeNode(A[i]);
+                nodeStack.push(node);
+            } else {
+                TreeNode n1 = nodeStack.pop();
+                while (!nodeStack.isEmpty() && nodeStack.peek().val < A[i]){
+                    TreeNode n2 = nodeStack.pop();
+                    n2.right = n1;
+                    n1 = n2;
+                }
+                TreeNode node = new TreeNode(A[i]);
+                node.left = n1;
+                nodeStack.push(node);
+            }
+        }
+        TreeNode root = nodeStack.pop();
+        while (!nodeStack.isEmpty()){
+            nodeStack.peek().right = root;
+            root = nodeStack.pop();
+        }
+        return root;
+    }
+}
+
+129. Rehashing
+//注意观察这道题的输入输出，万变不离其宗，依照java原来的数据结构来输出
+import java.util.*;
+
+class ListNode {
+  int val;
+  ListNode next;
+  ListNode(int x) {
+      this.val = x;
+      this.next = null;
+  }
+}
+class Solution {
+    /**
+     * @param hashTable: A list of The first node of linked list
+     * @return: A list of The first node of linked list which have twice size
+     */
+    public ListNode[] rehashing(ListNode[] hashTable) {
+        // write your code here
+        if (hashTable.length <= 0) {
+            return hashTable;
+        }
+        int newcapacity = 2 * hashTable.length;
+        ListNode[] newTable = new ListNode[newcapacity];
+        for (int i = 0; i < hashTable.length; i++) {
+            while (hashTable[i] != null) {
+                int newindex = (hashTable[i].val % newcapacity + newcapacity) % newcapacity;
+                if (newTable[newindex] == null) {
+                    newTable[newindex] = new ListNode(hashTable[i].val);
+                   // newTable[newindex].next = null;
+                } else {
+                    ListNode dummy = newTable[newindex];
+                    while (dummy.next != null) {
+                        dummy = dummy.next;
+                    }
+                    dummy.next = new ListNode(hashTable[i].val);
+                }
+                hashTable[i] = hashTable[i].next;
+            }
+        }
+        
+        //System.out.println(newTable[1].val);
+        
+        return newTable;
+    }
+}
+public class Main {
+    public static void main(String[] args) {
+        
+        Solution a = new Solution();
+        ListNode c = new ListNode(21);
+        ListNode d = new ListNode(9);
+        c.next = d;
+        d.next = null;
+        ListNode e = new ListNode(14);
+        e.next = null;
+        ListNode[] b = new ListNode[] {null, c, e, null};
+        ListNode[] res = a.rehashing(b);
+        for(int i = 0; i < res.length; i++){
+	        while(res[i] != null){
+	        	System.out.println(res[i].val);
+	        	res[i] = res[i].next;
+	        }
+	    }
+        
+    }
+  		//Scanner reader=new Scanner(System.in);
+		// System.out.print("input string:");
+		// String s=reader.nextLine();//
+		// int b = reader.nextInt();
+		// System.out.println("string:" + s);
+		// System.out.println("int:" + b);
+}
+
+/*HashTable中的方法加了同步锁（synchronized），所以对象是线程安全，而HashMap是异步的，
+因为HashMap的公共方法上没加synchronized关键字所以存放的对象并不是线程安全的，
+而HashSet的底层是用HashMap实现的，所以它也不是线程安全的。Vector安全，arraylist不安全
+就是线程同步的意思，就是当一个程序对一个线程安全的方法或者语句进行访问的时候，其他的不能再对他进行操作了，
+必须等到这次访问结束以后才能对这个线程安全的方法进行访问
+如果你的代码所在的进程中有多个线程在同时运行，而这些线程可能会同时运行这段代码。
+如果每次运行结果和单线程运行的结果是一样的，而且其他的变量的值也和预期的是一样的，就是线程安全的。
+ 举例 比如一个 ArrayList 类，在添加一个元素的时候，它可能会有两步来完成：1. 在 Items[Size] 的位置存放此元素；2. 增大 Size 的值。
+在单线程运行的情况下，如果 Size = 0，添加一个元素后，此元素在位置 0，而且 Size=1； 而如果是在多线程情况下，比如有两个线程，线程 A 先
+将元素存放在位置 0。但是此时 CPU 调度线程A暂停，线程 B 得到运行的机会。线程B也向此 ArrayList 添加元素，因为此时 Size 仍然等于 0 （注意哦，
+我们假设的是添加一个元素是要两个步骤哦，而线程A仅仅完成了步骤1），所以线程B也将元素存放在位置0。然后线程A和线程B都继续运行，都增
+加 Size 的值。 那好，现在我们来看看 ArrayList 的情况，元素实际上只有一个，存放在位置 0，而 Size 却等于 2。这就是“线程不安全”了。*/
+134. LRU Cache
+class Node{
+    int key;
+    int value;
+    Node pre;
+    Node next;
+ 
+    public Node(int key, int value){
+        this.key = key;
+        this.value = value;
+    }
+}
+public class LRUCache {
+    int capacity;
+    HashMap<Integer, Node> map = new HashMap<Integer, Node>();
+    Node head=null;
+    Node end=null;
+ 
+    public LRUCache(int capacity) {
+        this.capacity = capacity;
+    }
+ 
+    public int get(int key) {
+        if(map.containsKey(key)){
+            Node n = map.get(key);
+            remove(n);
+            setHead(n);//latest visited always put in the head
+            return n.value;
+        }
+ 
+        return -1;
+    }
+ 
+    public void remove(Node n){
+        if(n.pre!=null){
+            n.pre.next = n.next;
+        }else{
+            head = n.next;
+        }
+ 
+        if(n.next!=null){
+            n.next.pre = n.pre;
+        }else{
+            end = n.pre;
+        }
+ 
+    }
+ 
+    public void setHead(Node n){
+        n.next = head;
+        n.pre = null;
+ 
+        if(head!=null)
+            head.pre = n;
+ 
+        head = n;
+ 
+        if(end ==null)
+            end = head;
+    }
+ 
+    public void set(int key, int value) {
+        if(map.containsKey(key)){
+            Node old = map.get(key);
+            old.value = value;
+            remove(old);
+            setHead(old);
+        }else{
+            Node created = new Node(key, value);
+            if(map.size()>=capacity){
+                map.remove(end.key);
+                remove(end);
+                setHead(created);
+ 
+            }else{
+                setHead(created);
+            }    
+ 
+            map.put(key, created);
+        }
     }
 }
