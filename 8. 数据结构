@@ -1,1 +1,93 @@
+12. Min Stack
+public class MinStack {
+    private Stack<Integer> stack;
+    private Stack<Integer> minStack;
 
+    public MinStack() {
+        stack = new Stack<Integer>();
+        minStack = new Stack<Integer>();
+    }
+
+    public void push(int number) {
+        stack.push(number);
+        if (minStack.empty() == true)
+            minStack.push(number);
+        else {
+        // 这里考虑的相等的情况也会继续push
+        if (minStack.peek() >= number)
+            minStack.push(number);
+        }
+    }
+
+    public int pop() {
+        if (stack.peek().equals(minStack.peek()) ) 
+            minStack.pop();
+        return stack.pop();
+    }
+
+    public int min() {
+        return minStack.peek();
+    }
+}
+
+40. Implement Queue by Two Stacks
+public class MyQueue {
+    private Stack<Integer> stack1;
+    private Stack<Integer> stack2;
+
+    public MyQueue() {
+       // do initialization if necessary
+       stack1 = new Stack<Integer>();
+       stack2 = new Stack<Integer>();
+    }
+
+    public void push(int element) {
+        // write your code here
+        stack2.push(element);
+    }
+
+    public int pop() {
+        // write your code here
+        if(stack1.isEmpty()){
+            while(! stack2.isEmpty()){
+            stack1.push(stack2.pop());
+            }
+        }
+        return stack1.pop();
+    }
+
+    public int top() {
+        // write your code here
+        if(stack1.isEmpty()){
+            while(! stack2.isEmpty()){
+            stack1.push(stack2.pop());
+            }
+        }
+        return stack1.peek();
+    }
+}
+
+如何达到nlogn
+用logn的排序算法或者logn的数据结构，比如heap
+122. Largest Rectangle in Histogram 
+public class Solution {
+    public int largestRectangleArea(int[] height) {
+        if (height == null || height.length == 0) {
+            return 0;
+        }
+        
+        Stack<Integer> stack = new Stack<Integer>();
+        int max = 0;
+        for (int i = 0; i <= height.length; i++) {
+            int curt = (i == height.length) ? -1 : height[i];
+            while (!stack.isEmpty() && curt <= height[stack.peek()]) {
+                int h = height[stack.pop()];
+                int w = stack.isEmpty() ? i : i - stack.peek() - 1;
+                max = Math.max(max, h * w);
+            }
+            stack.push(i);
+        }
+        
+        return max;
+    }
+}
