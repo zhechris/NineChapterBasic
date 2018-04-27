@@ -576,4 +576,173 @@ public class Solution {
     }
 }
  
- 
+130. Heapify
+/*思路是从底部开始构建数组，将较小的结点移向上层结点。先取数组末尾的两个元素为left和right，
+若2*i+1和2*i+2越界，则赋Integer.MAX_VALUE，这样可以在后面的分支语句避免对越界情况不必要的讨论。
+然后，取left和right的较小者和上层A[i]结点交换，实现min-heap结构。交换了A[i]和A[2*i+1]/A[2*i+2]之后，
+还要重新heapify被交换到末位的原先的A[i]，即交换之后的A[2*i+1]/A[2*i+2]。然后i不断减小，直到整个数组完成heapify。*/
+public class Solution {
+    public void heapify(int[] A) {
+        for (int i = A.length/2; i >= 0; i--) {
+            helper(A, i);
+        }
+    }
+    public void helper(int[] A, int i) {
+        if (i > A.length) return;
+        int left = 2*i+1 < A.length ? A[2*i+1] : Integer.MAX_VALUE;
+        int right = 2*i+2 < A.length ? A[2*i+2] : Integer.MAX_VALUE;
+        if (left < right && left < A[i]) {
+            A[2*i+1] = A[i];
+            A[i] = left;
+            helper(A, 2*i+1);
+        }
+        else if (right < A[i]) {
+            A[2*i+2] = A[i];
+            A[i] = right;
+            helper(A, 2*i+2);
+        }
+    }
+}
+
+104. Merge K Sorted Lists
+/**
+ * Definition for ListNode.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int val) {
+ *         this.val = val;
+ *         this.next = null;
+ *     }
+ * }
+ */ 
+public class Solution {
+    /**
+     * @param lists: a list of ListNode
+     * @return: The head of one sorted list.
+     */
+    public ListNode mergeKLists(List<ListNode> lists) {
+        if (lists.size() == 0) {
+            return null;
+        }
+        return mergeHelper(lists, 0, lists.size() - 1);
+    }
+    
+    private ListNode mergeHelper(List<ListNode> lists, int start, int end) {
+        if (start == end) {
+            return lists.get(start);
+        }
+        
+        int mid = start + (end - start) / 2;
+        ListNode left = mergeHelper(lists, start, mid);
+        ListNode right = mergeHelper(lists, mid + 1, end);
+        return mergeTwoLists(left, right);
+    }
+    
+    private ListNode mergeTwoLists(ListNode list1, ListNode list2) {
+        ListNode dummy = new ListNode(0);
+        ListNode tail = dummy;
+        while (list1 != null && list2 != null) {
+            if (list1.val < list2.val) {
+                tail.next = list1;
+                tail = list1;
+                list1 = list1.next;
+            } else {
+                tail.next = list2;
+                tail = list2;
+                list2 = list2.next;
+            }
+        }
+        if (list1 != null) {
+            tail.next = list1;
+        } else {
+            tail.next = list2;
+        }
+        
+        return dummy.next;
+    }
+}
+
+132. Word Search II
+//使用 HashMap 的版本。
+//将所有的单词的 Prefix 都加入 HashMap 中。HashMap 的 value 用户判断这是一个 prefix 还是一个 word。
+//如果是 prefix 就是 false，如果是 word 就是 true.
+public class Solution {
+    public static int[] dx = {0, 1, -1, 0};
+    public static int[] dy = {1, 0, 0, -1};
+    /**
+     * @param board: A list of lists of character
+     * @param words: A list of string
+     * @return: A list of string
+     */
+    public List<String> wordSearchII(char[][] board, List<String> words) {
+        if (board == null || board.length == 0) {
+            return new ArrayList<>();
+        }
+        if (board[0] == null || board[0].length == 0) {
+            return new ArrayList<>();
+        }
+        
+        boolean[][] visited = new boolean[board.length][board[0].length];
+        Map<String, Boolean> prefixIsWord = getPrefixSet(words);
+        Set<String> wordSet = new HashSet<>();
+        
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                visited[i][j] = true;
+                dfs(board, visited, i, j, String.valueOf(board[i][j]), prefixIsWord, wordSet);
+                visited[i][j] = false;
+            }
+        }
+        
+        return new ArrayList<String>(wordSet);
+    }
+    
+    private Map<String, Boolean> getPrefixSet(List<String> words) {
+        Map<String, Boolean> prefixIsWord = new HashMap<>();
+        for (String word : words) {
+            for (int i = 0; i < word.length() - 1; i++) {
+                String prefix = word.substring(0, i + 1);
+                if (!prefixIsWord.containsKey(prefix)) {
+                    prefixIsWord.put(prefix, false);
+                }
+            }
+            prefixIsWord.put(word, true);
+        }
+        
+        return prefixIsWord;
+    }
+    
+    private void dfs(char[][] board,
+                     boolean[][] visited,
+                     int x,
+                     int y,
+                     String word,
+                     Map<String, Boolean> prefixIsWord,
+                     Set<String> wordSet) {
+        if (!prefixIsWord.containsKey(word)) {
+            return;
+        }
+        
+        if (prefixIsWord.get(word)) {
+            wordSet.add(word);
+        }
+        
+        for (int i = 0; i < 4; i++) {
+            int adjX = x + dx[i];
+            int adjY = y + dy[i];
+            
+            if (!(inside(board, adjX, adjY)) || visited[adjX][adjY]) {
+                continue;
+            }
+            
+            visited[adjX][adjY] = true;
+            dfs(board, visited, adjX, adjY, word + board[adjX][adjY], prefixIsWord, wordSet);
+            visited[adjX][adjY] = false;
+        }
+    }
+    
+    private boolean inside(char[][] board, int x, int y) {
+        return x >= 0 && x < board.length && y >= 0 && y < board[0].length;
+    }
+}
