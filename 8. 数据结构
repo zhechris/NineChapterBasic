@@ -732,7 +732,7 @@ public class Solution {
             int adjX = x + dx[i];
             int adjY = y + dy[i];
             
-            if (!(inside(board, adjX, adjY)) || visited[adjX][adjY]) {
+            if (!(adjX >= 0 && adjX < board.length && adjY >= 0 && adjY < board[0].length) || visited[adjX][adjY]) {
                 continue;
             }
             
@@ -740,9 +740,5 @@ public class Solution {
             dfs(board, visited, adjX, adjY, word + board[adjX][adjY], prefixIsWord, wordSet);
             visited[adjX][adjY] = false;
         }
-    }
-    
-    private boolean inside(char[][] board, int x, int y) {
-        return x >= 0 && x < board.length && y >= 0 && y < board[0].length;
     }
 }
