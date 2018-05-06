@@ -107,7 +107,7 @@ public class Solution {
         // write your code here
         ArrayList<DirectedGraphNode> result = new ArrayList<DirectedGraphNode>();
         HashMap<DirectedGraphNode, Integer> map = new HashMap();
-        for (DirectedGraphNode node : graph) {
+        for (DirectedGraphNode node : graph) {//统计入度
             for (DirectedGraphNode neighbor : node.neighbors) {
                 if (map.containsKey(neighbor)) {
                     map.put(neighbor, map.get(neighbor) + 1);
@@ -118,7 +118,7 @@ public class Solution {
         }
         Queue<DirectedGraphNode> q = new LinkedList<DirectedGraphNode>();
         for (DirectedGraphNode node : graph) {
-            if (!map.containsKey(node)) {
+            if (!map.containsKey(node)) {//入度为0的最先进入
                 q.offer(node);
                 result.add(node);
             }
