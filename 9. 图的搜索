@@ -136,3 +136,50 @@ public class Solution {
         return result;
     }
 }
+//DFS版本
+public class Solution {
+    /*
+     * @param graph: A list of Directed graph node
+     * @return: Any topological order for the given graph.
+     */
+    public ArrayList<DirectedGraphNode> topSort(ArrayList<DirectedGraphNode> graph) {
+        Map<DirectedGraphNode, Integer> indegree = new HashMap<>();
+        for (DirectedGraphNode node : graph) {
+            indegree.put(node, 0);
+        }
+        
+        for (DirectedGraphNode node : graph) {
+            for (DirectedGraphNode neighbor : node.neighbors) {
+                indegree.put(neighbor, indegree.get(neighbor) + 1);
+            }
+        }
+        
+        ArrayList<DirectedGraphNode> result = new ArrayList<>();
+        DirectedGraphNode root = null;
+        while ((root = get0IndegreeNode(indegree)) != null) {
+            result.add(root);
+            dfs(result, indegree, root);
+        }
+        return result;
+    }
+    
+    DirectedGraphNode get0IndegreeNode(Map<DirectedGraphNode, Integer> indegree) {
+        for (Map.Entry<DirectedGraphNode, Integer> entry : indegree.entrySet()) {
+            if (entry.getValue() == 0) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+    
+    void dfs(List<DirectedGraphNode> result, Map<DirectedGraphNode, Integer> indegree, DirectedGraphNode root) {
+        indegree.put(root, -1);//入度已经为0的val置为-1，免得下次又进入递归去
+        for (DirectedGraphNode neighbor : root.neighbors) {
+            indegree.put(neighbor, indegree.get(neighbor) - 1);
+            if (indegree.get(neighbor) == 0) {
+                result.add(neighbor);
+                dfs(result, indegree, neighbor);
+            }
+        }
+    }
+}
