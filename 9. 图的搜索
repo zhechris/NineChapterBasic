@@ -183,3 +183,92 @@ public class Solution {
         }
     }
 }
+
+15. Permutations
+public class Solution {
+    /*
+     * @param nums: A list of integers.
+     * @return: A list of permutations.
+     */
+    public List<List<Integer>> permute(int[] nums) {
+        // write your code here
+        List<List<Integer>> res = new ArrayList<>();
+        if(nums == null){
+            return res;
+        }
+        if(nums.length == 0){
+            res.add(new ArrayList<Integer>());
+            return res;
+        }
+        List<Integer> temp = new ArrayList<Integer>();
+        Set<Integer> set = new HashSet<>();
+        dfs(res, nums, set, temp);
+        return res;
+    }
+    public void dfs(List<List<Integer>> res, int[] nums, Set<Integer>set, List<Integer>temp){
+        if(temp.size() == nums.length){
+            res.add(new ArrayList<>(temp));
+            return;
+        }
+        
+        for(int i = 0; i < nums.length; i++){
+            if (set.contains(nums[i])) {// make sure next loop won't add same number
+                continue;
+            }
+            set.add(nums[i]);
+            temp.add(nums[i]);
+            dfs(res, nums, set, temp);
+            set.remove(nums[i]);
+            temp.remove(temp.size() - 1);
+        }
+    }
+}
+
+17. Subsets
+class Solution {
+    /**
+     * @param S: A set of numbers.
+     * @return: A list of lists. All valid subsets.
+     */
+    public List<List<Integer>> subsets(int[] nums) {
+        List<List<Integer>> results = new ArrayList<>();
+        
+        if (nums == null) {
+            return results;
+        }
+        
+        if (nums.length == 0) {
+            results.add(new ArrayList<Integer>());
+            return results;
+        }
+        
+        Arrays.sort(nums);
+        helper(new ArrayList<Integer>(), nums, 0, results);
+        return results;
+    }
+    
+    
+    // 递归三要素
+    // 1. 递归的定义：在 Nums 中找到所有以 subset 开头的的集合，并放到 results
+    private void helper(ArrayList<Integer> subset,
+                        int[] nums,
+                        int startIndex,
+                        List<List<Integer>> results) {
+        // 2. 递归的拆解
+        // deep copy
+        // results.add(subset);
+        results.add(new ArrayList<Integer>(subset));
+        
+        for (int i = startIndex; i < nums.length; i++) {
+            // [1] -> [1,2]
+            subset.add(nums[i]);
+            // 寻找所有以 [1,2] 开头的集合，并扔到 results
+            helper(subset, nums, i + 1, results);
+            // [1,2] -> [1]  回溯
+            subset.remove(subset.size() - 1);
+        }
+        
+        // 3. 递归的出口
+        // return;
+    }
+}
