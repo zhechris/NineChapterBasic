@@ -407,3 +407,89 @@ public class Solution {
         return true;
     }
 }
+
+135. Combination Sum
+public class Solution {
+    public  List<List<Integer>> combinationSum(int[] candidates, int target) {
+        List<List<Integer>> result = new ArrayList<>();
+        if (candidates == null) {
+            return result;
+        }
+
+        List<Integer> combination = new ArrayList<>();
+        Arrays.sort(candidates);
+        helper(candidates, 0, target, combination, result);
+
+        return result;
+    }
+
+     void helper(int[] candidates,
+                 int index,
+                 int target,
+                 List<Integer> combination,
+                 List<List<Integer>> result) {
+        if (target == 0) {
+            result.add(new ArrayList<Integer>(combination));
+            return;
+        }
+
+        for (int i = index; i < candidates.length; i++) {
+            if (candidates[i] > target) {
+                break;
+            }
+
+            if (i != 0 && candidates[i] == candidates[i - 1]) {
+                continue;
+            }
+
+            combination.add(candidates[i]);
+            helper(candidates, i, target - candidates[i], combination, result);
+            combination.remove(combination.size() - 1);
+        }
+    }
+}
+
+153. Combination Sum II
+public class Solution {
+    /**
+     * @param num: Given the candidate numbers
+     * @param target: Given the target number
+     * @return: All the combinations that sum to target
+     */
+    public List<List<Integer>> combinationSum2(int[] candidates,
+            int target) {
+        List<List<Integer>> results = new ArrayList<>();
+        if (candidates == null || candidates.length == 0) {
+            return results;
+        }
+
+        Arrays.sort(candidates);
+        List<Integer> combination = new ArrayList<Integer>();
+        helper(candidates, 0, combination, target, results);
+
+        return results;
+    }
+
+    private void helper(int[] candidates,
+                        int startIndex,
+                        List<Integer> combination,
+                        int target,
+                        List<List<Integer>> results) {
+        if (target == 0) {
+            results.add(new ArrayList<Integer>(combination));
+            return;
+        }
+
+        for (int i = startIndex; i < candidates.length; i++) {
+            if (i != startIndex && candidates[i] == candidates[i - 1]) {
+                continue;
+            }
+            if (target < candidates[i]) {
+                break;
+            }
+            combination.add(candidates[i]);
+            helper(candidates, i + 1, combination, target - candidates[i], results);
+            combination.remove(combination.size() - 1);
+        }
+    }
+}
