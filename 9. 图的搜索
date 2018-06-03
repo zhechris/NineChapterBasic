@@ -272,3 +272,55 @@ class Solution {
         // return;
     }
 }
+
+33. N-Queens
+public class Solution {
+    /*
+     * @param n: The number of queens
+     * @return: All distinct solutions
+     */
+    public List<List<String>> solveNQueens(int n) {
+        // write your code here
+        List<List<String>> res = new ArrayList<>();
+        if(n <= 0){
+            return res;
+        }
+        //colval[] row represents x, column represents y
+        int[] colval = new int[n];
+        dfs(n, res, 0, colval);
+        return res;
+    }
+    public void dfs(int n, List<List<String>> res, int row, int[] colval){
+        //current row equal to n queen, success
+        if(row == n){
+            List<String> unit = new ArrayList<>();
+            for(int i = 0; i < n; i++){
+                StringBuilder sb = new StringBuilder();
+                for(int j = 0; j < n; j++){
+                    if(colval[i] == j){
+                        sb.append('Q');
+                    } else{
+                        sb.append('.');
+                    }
+                }
+                unit.add(sb.toString());
+            }
+            res.add(unit);
+            return;
+        } 
+        for(int i = 0; i < n; i++){
+            colval[row] = i;//iterative, until satisfise the condition
+            if(isValid(row, colval)){
+                dfs(n, res, row + 1, colval);
+            }
+        }
+    }
+    public boolean isValid(int row, int[] colval){
+        for(int i = 0; i < row; i++){
+            if(colval[row] == colval[i] || Math.abs(colval[row] - colval[i]) == row - i){//not diagnial and same column
+                return false;
+            }
+        }
+        return true;
+    }
+}
