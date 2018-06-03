@@ -324,3 +324,38 @@ public class Solution {
         return true;
     }
 }
+
+18. Subsets II
+public class Solution {
+    /**
+     * @param nums: A set of numbers.
+     * @return: A list of lists. All valid subsets.
+     */
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        // write your code here
+        List<List<Integer>> res = new ArrayList<>();
+        if(nums == null){
+            return res;
+        }
+        if(nums.length == 0){
+            res.add(new ArrayList<>());//list.add的返回值为boolean类型，所以不能直接return。
+            return res;
+        }
+        Arrays.sort(nums);
+        List<Integer> list = new ArrayList<>();
+        dfs(res, list, nums, 0);
+        return res;
+    }
+    public void dfs(List<List<Integer>> res, List<Integer> list, int[] nums, int startIndex){
+        res.add(new ArrayList<>(list));
+        for(int i = startIndex; i < nums.length; i++){
+            if(i != startIndex && nums[i] == nums[i - 1]){
+                continue;
+            }
+            list.add(nums[i]);
+            dfs(res, list, nums, i + 1);
+            list.remove(list.size() - 1);
+            
+        }
+    }
+}
