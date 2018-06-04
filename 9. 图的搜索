@@ -493,3 +493,160 @@ public class Solution {
         }
     }
 }
+
+120. Word Ladder
+public class Solution {
+    public int ladderLength(String start, String end, Set<String> dict) {
+        if (dict == null) {
+            return 0;
+        }
+
+        if (start.equals(end)) {
+            return 1;
+        }
+        
+        dict.add(start);
+        dict.add(end);
+
+        HashSet<String> hash = new HashSet<String>();
+        Queue<String> queue = new LinkedList<String>();
+        queue.offer(start);
+        hash.add(start);
+        
+        int length = 1;
+        while(!queue.isEmpty()) {
+            length++;
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                String word = queue.poll();
+                for (String nextWord: getNextWords(word, dict)) {
+                    if (hash.contains(nextWord)) {
+                        continue;
+                    }
+                    if (nextWord.equals(end)) {
+                        return length;
+                    }
+                    
+                    hash.add(nextWord);
+                    queue.offer(nextWord);
+                }
+            }
+        }
+        return 0;
+    }
+
+    // replace character of a string at given index to a given character
+    // return a new string
+    private String replace(String s, int index, char c) {
+        char[] chars = s.toCharArray();
+        chars[index] = c;
+        return new String(chars);
+    }
+    
+    // get connections with given word.
+    // for example, given word = 'hot', dict = {'hot', 'hit', 'hog'}
+    // it will return ['hit', 'hog']
+    private ArrayList<String> getNextWords(String word, Set<String> dict) {
+        ArrayList<String> nextWords = new ArrayList<String>();
+        for (char c = 'a'; c <= 'z'; c++) {
+            for (int i = 0; i < word.length(); i++) {
+                if (c == word.charAt(i)) {
+                    continue;
+                }
+                String nextWord = replace(word, i, c);
+                if (dict.contains(nextWord)) {
+                    nextWords.add(nextWord);
+                }
+            }
+        }
+        return nextWords;
+    }
+}
+
+121. Word Ladder II
+public class Solution {
+    /*
+     * @param start: a string
+     * @param end: a string
+     * @param dict: a set of string
+     * @return: a list of lists of string
+     */
+    public List<List<String>> findLadders(String beginWord, String endWord, Set<String> wordDict){
+        List<List<String>> Ladders = new ArrayList<List<String>>();
+        //优化一：BFS时记录每个单词的前驱
+        HashMap<String, List<String>> preGraph = new HashMap<String, List<String>>();
+        //优化二：记录每个节点的最短距离，往回找的时候可以进一步剪枝，同时在构图的过程中也避免了环的存在
+        HashMap<String, Integer> distance = new HashMap<String, Integer>();
+        
+        wordDict.add(beginWord);
+        wordDict.add(endWord);
+        for(String word : wordDict){
+            preGraph.put(word, new ArrayList<String>());
+        }
+        
+        //build the graph, get the preGraph and distance
+        bfs(preGraph, distance, beginWord, wordDict);
+        //find all the shortest path
+        //List<String> path = new ArrayList<String>();
+        dfs(Ladders, new ArrayList<String>(), endWord, beginWord, distance, preGraph);
+        return Ladders;
+    }
+    
+    /*
+     *寻找差异为一的单词有两种方法：
+     *(1)将目标单词与字典里的所有单词比较，O(n*l), n是字典容量(1000+),l是单词长度；
+     *(2)将目标的字母用'a'-'z'挨个替换，利用Set.contains()函数搜索。由于Set.contains()是O(1)的，这种方法是O(26*l) 
+     */
+    public List<String> getNextWords(String words, Set<String> wordDict){
+        List<String> nextWords = new ArrayList<String>();
+        for(int i = 0; i < words.length(); i++){
+            for(char c = 'a'; c <= 'z'; c++){
+                if(c == words.charAt(i)) continue; //如果没有distance, 需要用这一步避免成环
+                char[] arr = words.toCharArray();
+                arr[i] = c;
+                String next = new String(arr);
+                if(wordDict.contains(next)) nextWords.add(next);
+            }
+        }
+        return nextWords;
+    }
+    
+    public void bfs(HashMap<String, List<String>> preGraph, HashMap<String, Integer> distance, String beginWord, Set<String> wordDict){
+        LinkedList<String> queue = new LinkedList<String>();
+        queue.offer(beginWord);
+        distance.put(beginWord, 0);
+        
+        while(!queue.isEmpty()){
+            String curr = queue.poll();
+            for(String next : getNextWords(curr, wordDict)){
+                preGraph.get(next).add(curr);
+                if(!distance.containsKey(next)){
+                    distance.put(next, distance.get(curr) + 1);
+                    //保证每个单词之进入队列一次
+                    queue.offer(next);
+                }
+            }
+        }
+    }
+    
+    public void dfs(List<List<String>> Ladders, List<String> path, String curr, String beginWord, HashMap<String, Integer> distance, HashMap<String, List<String>> preGraph){
+        if(curr.equals(beginWord)){
+            path.add(curr);
+            Collections.reverse(path);
+            Ladders.add(path);
+            //Collections.reverse(path)
+            //path.remove(path.size() - 1)
+            return;
+        }
+        
+        for(String next : preGraph.get(curr)){
+            //剪枝，去掉非最短路的情况
+            if(distance.get(curr) - 1 == distance.get(next)){
+                path.add(curr);
+                //如果这里直接用path而不是new ArrayList<String>(path), 68行的代码就需要执行了
+                dfs(Ladders, new ArrayList<String>(path), next, beginWord, distance, preGraph);
+                path.remove(path.size() - 1);
+            }
+        }
+    }
+}
