@@ -66,3 +66,42 @@ public class Solution {
         return bound;
     }
 }
+
+60. Search Insert Position
+public class Solution {
+    /**
+     * @param A: an integer sorted array
+     * @param target: an integer to be inserted
+     * @return: An integer
+     */
+    public int searchInsert(int[] A, int target) {
+        // write your code here
+        int index = 0;
+        if (A == null || A.length == 0) {
+            return index;
+        }
+        
+        int start = 0;
+        int end = A.length - 1;
+        
+        while (start + 1 < end) {
+            int mid = start + (end - start) / 2;
+            if(A[mid] == target) {
+                return mid;
+            } else if (A[mid] < target) {
+                start = mid;
+            } else {
+                end = mid;
+            }
+        }
+        if (A[start] >= target) {
+            index = start;
+        } else if (A[end] < target) {
+            index = end + 1;
+        } else {
+            index = end;
+        }
+        return index;
+    }
+}
+
