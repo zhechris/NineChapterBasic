@@ -167,3 +167,77 @@ public class Solution {
         return false;
     }
 }
+
+************************************
+这道题充分说明了代码写不好，数学来凑，一刷用数学思考，从左下角到右上角扫描，记住这种思维，
+二刷用的普通的二维数组转换为一维数组的办法
+二刷：
+38. Search a 2D Matrix II
+public class Solution {
+    /**
+     * @param matrix: A list of lists of integers
+     * @param target: An integer you want to search in matrix
+     * @return: An integer indicate the total occurrence of target in the given matrix
+     */
+    public int searchMatrix(int[][] matrix, int target) {
+        // write your code here
+        int count = 0;
+        if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
+            return count;
+        }
+        int n = matrix.length;
+        int m = matrix[0].length;
+        
+        int[] tran = new int[n * m];
+        
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++){
+                tran[i * m + j] = matrix[i][j];
+            }
+        }
+        
+        for (int i = 0; i < tran.length; i++) {
+            if (target == tran[i]) {
+                count++;
+            }
+        }
+        return count;
+    }
+}
+一刷：
+public class Solution {
+    /**
+     * @param matrix: A list of lists of integers
+     * @param: A number you want to search in the matrix
+     * @return: An integer indicate the occurrence of target in the given matrix
+     */
+    public int searchMatrix(int[][] matrix, int target) {
+        // check corner case
+        if (matrix == null || matrix.length == 0) {
+            return 0;
+        }
+        if (matrix[0] == null || matrix[0].length == 0) {
+            return 0;
+        }
+        
+        // from bottom left to top right
+        int n = matrix.length;
+        int m = matrix[0].length;
+        int x = n - 1;
+        int y = 0;
+        int count = 0;
+        
+        while (x >= 0 && y < m) {
+            if (matrix[x][y] < target) {
+                y++;
+            } else if (matrix[x][y] > target) {
+                x--;
+            } else {
+                count++;
+                x--;
+                y++;
+            }
+        }
+        return count;
+    }
+}
