@@ -1,0 +1,68 @@
+**********************
+二分法的应用，一开始没有想到用寻找左边界二分，然后再寻找右边界二分。
+只是想到先找到中点，然后再用另外两个指针平移，这样会有最坏情况，就是所有的数字都一样，会有最坏的情况，O(N) TLE
+二分法的精髓在于，最后会划分成只有两个数字的区间，按照要求判断即可！
+61. Search for a Range
+public class Solution {
+    /**
+     * @param A: an integer sorted array
+     * @param target: an integer to be inserted
+     * @return: a list of length 2, [index1, index2]
+     */
+    public int[] searchRange(int[] A, int target) {
+        // write your code here
+        int[] bound = new int[]{-1, -1};
+        
+        if(A == null || A.length == 0){
+            return bound;
+        }
+        
+        int start, end, mid;
+         
+        // search for left bound
+        start = 0; 
+        end = A.length - 1;
+        while (start + 1 < end) {
+            mid = start + (end - start) / 2;
+            if (A[mid] == target) {
+                end = mid;
+            } else if (A[mid] < target) {
+                start = mid;
+            } else {
+                end = mid;
+            }
+        }
+        if (A[start] == target) {
+            bound[0] = start;
+        } else if (A[end] == target) {
+            bound[0] = end;
+        } else {
+            bound[0] = bound[1] = -1;
+            return bound;
+        }
+        
+        // search for right bound
+        start = 0;
+        end = A.length - 1;
+        while (start + 1 < end) {
+            mid = start + (end - start) / 2;
+            if (A[mid] == target) {
+                start = mid;
+            } else if (A[mid] < target) {
+                start = mid;
+            } else {
+                end = mid;
+            }
+        }
+        if (A[end] == target) {
+            bound[1] = end;
+        } else if (A[start] == target) {
+            bound[1] = start;
+        } else {
+            bound[0] = bound[1] = -1;
+            return bound;
+        }
+        
+        return bound;
+    }
+}
