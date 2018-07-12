@@ -104,4 +104,66 @@ public class Solution {
         return index;
     }
 }
-
+******************************
+test是通过了，但是不如一刷的代码优美，row的选择就是row的选择，不掺杂判断，最后在col里面判断即可，减少重复判断
+28. Search a 2D Matrix
+public class Solution {
+    /**
+     * @param matrix: matrix, a list of lists of integers
+     * @param target: An integer
+     * @return: a boolean, indicate whether matrix contains target
+     */
+    public boolean searchMatrix(int[][] matrix, int target) {
+        // write your code here
+        if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
+            return false;
+        }
+        int row = 0;
+        int n = matrix.length;//row
+        int m = matrix[0].length;//column
+        
+        int startn = 0;
+        int endn = n - 1;
+        // select the row
+        while (startn + 1 < endn) {
+            int mid = startn + (endn - startn) / 2;
+            if (matrix[mid][0] == target) {
+                return true;
+            } else if (matrix[mid][0] < target) {
+                startn = mid;
+            } else {
+                endn = mid;
+            }
+        }
+        if (matrix[startn][0] > target || matrix[endn][m - 1] < target){
+            return false;
+        } else if (matrix[startn][0] == target || matrix[endn][0] == target) {
+            return true;
+        } else {
+            if (target < matrix[endn][0]) {
+                row = startn;
+            } else {
+                row = endn;
+            }
+        }
+        
+        //select the colunm
+        int startm = 0;
+        int endm = m - 1;
+        while (startm + 1 < endm) {
+            int mid = startm + (endm - startm) / 2;
+            if (matrix[row][mid] == target) {
+                return true;
+            } else if (matrix[row][mid] < target) {
+                startm = mid;
+            } else {
+                endm = mid;
+            }
+        }
+        
+        if (matrix[row][startm] == target || matrix[row][endm] == target) {
+            return true;
+        }
+        return false;
+    }
+}
