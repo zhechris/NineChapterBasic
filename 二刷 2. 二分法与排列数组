@@ -434,3 +434,55 @@ public class Solution {
         }
     }
 }
+
+****************************
+之前分为rotate or not的思路不能用时候，就要换一种思路
+看看区间性，比如target是否在给定区间，这个区间是否对rotate or not都适用，如果适用，就可以
+62. Search in Rotated Sorted Array
+public class Solution {
+    /**
+     * @param A: an integer rotated sorted array
+     * @param target: an integer to be searched
+     * @return: an integer
+     */
+    public int search(int[] A, int target) {
+        // write your code here
+        if (A == null || A.length == 0) {
+            return -1;
+        }
+
+        int start = 0;
+        int end = A.length - 1;
+        int mid;
+        
+        while (start + 1 < end) {
+            mid = start + (end - start) / 2;
+            if (A[mid] == target) {
+                return mid;
+            }
+            if (A[start] < A[mid]) {
+                // situation 1, red line
+                if (A[start] <= target && target <= A[mid]) {// target在区间内
+                    end = mid;
+                } else {
+                    start = mid;
+                }
+            } else {
+                // situation 2, green line
+                if (A[mid] <= target && target <= A[end]) {
+                    start = mid;
+                } else {
+                    end = mid;
+                }
+            }
+        } // while
+        
+        if (A[start] == target) {
+            return start;
+        }
+        if (A[end] == target) {
+            return end;
+        }
+        return -1;
+    }
+}
