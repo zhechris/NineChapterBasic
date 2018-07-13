@@ -250,7 +250,7 @@ public class Solution {
             }else if(A[mid] < A[mid - 1]){
                 end = mid;
             }else {
-                end = mid;//此时分为两种情况， 在峰谷和封顶，无所谓， 继续二分即可
+                end = mid;//mid在峰顶
             }// start = mid也行
         }
         if(A[start] < A[end]) {
