@@ -668,7 +668,7 @@ public class Solution {
         int indexA = startA + k / 2 - 1; 
         int indexB = startB + k / 2 - 1; 
         int keyA = indexA < A.length ? A[indexA] : Integer.MAX_VALUE; //If the array has no more than k /2 elements, we set key = MAX_VALUE.
-        int keyB = indexB < B.length ? B[indexB] : Integer.MAX_VALUE; 
+        int keyB = indexB < B.length ? B[indexB] : Integer.MAX_VALUE; //if A is not enough, we can only find it from B
          
         if (keyA < keyB) { 
             return findKth(A, startA + k / 2, B, startB, k - k / 2); 
