@@ -486,3 +486,36 @@ public class Solution {
         return -1;
     }
 }
+
+***************************
+当有重复的数字时候，要考虑怎么移动指针，把重复的数绕过去
+160. Find Minimum in Rotated Sorted Array II
+public class Solution {
+    /**
+     * @param nums: a rotated sorted array
+     * @return: the minimum number in the array
+     */
+    public int findMin(int[] nums) {
+        // write your code here
+        if(nums == null || nums.length == 0){
+            return -1;
+        }
+        int start = 0;
+        int end = nums.length - 1;
+        while (start + 1 < end) {
+            int mid = start + (end - start) / 2;
+            if(nums[mid] == nums[end]){
+                end--;//因为是递增的序列，所以移动后面对最小值没有影响
+            } else if (nums[mid] > nums[end]) {
+                start = mid;
+            } else {
+                end = mid;
+            }
+        }
+        if(nums[start] < nums[end]){
+            return nums[start];
+        } else {
+            return nums[end];
+        }
+    }
+}
