@@ -434,6 +434,39 @@ public class Solution {
         }
     }
 }
+***************************
+当有重复的数字时候，要考虑怎么移动指针，把重复的数绕过去
+然后更改start和end时候 先判断有顺序的一边
+160. Find Minimum in Rotated Sorted Array II
+public class Solution {
+    /**
+     * @param nums: a rotated sorted array
+     * @return: the minimum number in the array
+     */
+    public int findMin(int[] nums) {
+        // write your code here
+        if(nums == null || nums.length == 0){
+            return -1;
+        }
+        int start = 0;
+        int end = nums.length - 1;
+        while (start + 1 < end) {
+            int mid = start + (end - start) / 2;
+            if(nums[mid] == nums[end]){
+                end--;//挪动指针，start++也可以
+            } else if (nums[mid] > nums[end]) {
+                start = mid;
+            } else {
+                end = mid;
+            }
+        }
+        if(nums[start] < nums[end]){
+            return nums[start];
+        } else {
+            return nums[end];
+        }
+    }
+}
 
 ****************************
 之前分为rotate or not的思路不能用时候，就要换一种思路
@@ -487,35 +520,47 @@ public class Solution {
     }
 }
 
-***************************
-当有重复的数字时候，要考虑怎么移动指针，把重复的数绕过去
-160. Find Minimum in Rotated Sorted Array II
+63. Search in Rotated Sorted Array II
 public class Solution {
     /**
-     * @param nums: a rotated sorted array
-     * @return: the minimum number in the array
+     * @param A: an integer ratated sorted array and duplicates are allowed
+     * @param target: An integer
+     * @return: a boolean 
      */
-    public int findMin(int[] nums) {
+    public boolean search(int[] nums, int target) {
         // write your code here
-        if(nums == null || nums.length == 0){
-            return -1;
+        if (nums == null || nums.length == 0) {
+            return false;
         }
         int start = 0;
         int end = nums.length - 1;
-        while (start + 1 < end) {
+        while (start + 1 < end){
             int mid = start + (end - start) / 2;
-            if(nums[mid] == nums[end]){
-                end--;//因为是递增的序列，所以移动后面对最小值没有影响
-            } else if (nums[mid] > nums[end]) {
-                start = mid;
-            } else {
-                end = mid;
+            if (nums[mid] == target)
+                return true;
+            if (nums[start] < nums[mid]){
+                if (nums[start] <= target && target < nums[mid])
+                    end = mid;
+                else
+                    start = mid;
+            }else if(nums[start] > nums[mid]){
+                if (nums[mid] < target && target <= nums[end])
+                    start = mid;
+                else
+                    end = mid;
+            }else {
+                //If nums[start] == nums[mid], just move start to the next index. 
+                //So the worst case, that the array's elements are same, is O(n).
+                start++;//因为之前的判断是mid和start在比较，所以移动start
+                //移动end也行，但是前面的判断，永远先根据一边有顺序的判断
             }
         }
-        if(nums[start] < nums[end]){
-            return nums[start];
-        } else {
-            return nums[end];
+        if (nums[start] == target) {
+            return true;
         }
+        if (nums[end] == target) {
+            return true;
+        }
+        return false;
     }
 }
