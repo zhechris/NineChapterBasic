@@ -556,3 +556,41 @@ public class Solution {
         return sb.length() == 0 ? " " : sb.substring(0, sb.length() - 1);
     }
 }
+
+************************************
+159. Find Minimum in Rotated Sorted Array
+和一刷写的不太一样，但是这个更好理解，把图画出来就可以了
+public class Solution {
+    /**
+     * @param nums: a rotated sorted array
+     * @return: the minimum number in the array
+     */
+    public int findMin(int[] nums) {
+        // write your code here
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+        
+        int start = 0;
+        int end = nums.length - 1;
+        
+        while (start + 1 < end) {
+            int mid = start + (end - start) / 2;
+            if (nums[start] > nums[end]) {//rotate
+                if (nums[mid] < nums[end]) {
+                    end = mid;
+                } else if (nums[mid] > nums[end]) {
+                    start = mid;
+                }
+            } else {
+                return nums[start];
+            }
+        }
+        
+        if (nums[start] < nums[end]) {
+            return nums[start];
+        } else {
+            return nums[end];
+        }
+    }
+}
