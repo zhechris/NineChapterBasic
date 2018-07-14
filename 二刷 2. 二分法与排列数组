@@ -730,3 +730,29 @@ public class Solution {
         reverse(str, 0, str.length - 1);
     }
 }
+************************
+考察一些stringbuilder的用法 比如append，substring，toString
+还有String数组的用法，String[] array = s.split(" ")
+53. Reverse Words in a String
+public class Solution {
+    /*
+     * @param s: A string
+     * @return: A string
+     */
+    public String reverseWords(String s) {
+        // write your code here
+        if (s == null || s.length() == 0) {
+            return "";
+        }
+        
+        String[] array = s.split(" ");
+        StringBuilder sb = new StringBuilder();
+        for (int i = array.length - 1; i >= 0; i--) {
+            if(!array[i].equals("")){//in case multiple space
+                sb.append(array[i]).append(" ");
+            }
+        }
+        //return sb.length() == 0 ? " " : sb.substring(0, sb.length() - 1);
+        return sb.toString();
+    }
+}
