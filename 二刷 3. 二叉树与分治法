@@ -134,3 +134,40 @@ public class Solution {
         return result;
     }
 }
+
+68. Binary Tree Postorder Traversal
+//递归算法
+/**
+ * Definition of TreeNode:
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left, right;
+ *     public TreeNode(int val) {
+ *         this.val = val;
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+
+public class Solution {
+    /**
+     * @param root: A Tree
+     * @return: Postorder in ArrayList which contains node values.
+     */
+    public List<Integer> postorderTraversal(TreeNode root) {
+        // write your code here
+        List<Integer> result = new ArrayList<Integer>();
+        traverse(root, result);
+        return result;
+    }
+    
+    private void traverse(TreeNode root, List<Integer> result){
+        if(root == null){
+            return;
+        }
+        
+        traverse(root.left, result);
+        traverse(root.right, result);
+        result.add(root.val);
+    }
+}
