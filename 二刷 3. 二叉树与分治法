@@ -284,3 +284,58 @@ public class Solution {
         return null;
     }
 }
+
+************************************
+
+没写出来，so sad, 需要抽时间反复来几遍
+94. Binary Tree Maximum Path Sum
+
+/**
+ * Definition of TreeNode:
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left, right;
+ *     public TreeNode(int val) {
+ *         this.val = val;
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+
+public class Solution {
+    /**
+     * @param root: The root of binary tree.
+     * @return: An integer
+     */
+    class result {
+        int singlepath; //include the root from top to bottom SecurityManager
+        int maxPath;// global maxPath
+        result(int singlepath, int maxPath) {
+            this.singlepath = singlepath;
+            this.maxPath = maxPath;
+        }
+    }
+    
+    public int maxPathSum(TreeNode root) {
+        // write your code here
+        result result = dfs(root);
+        return result.maxPath;
+    }
+    
+    private result dfs(TreeNode root) {
+        if (root == null) {
+            return new result(Integer.MIN_VALUE, Integer.MIN_VALUE);
+        }
+        
+        result left = dfs(root.left);
+        result right = dfs(root.right);
+        //include root val's max sum from top to bottom
+        int singlepath = Math.max(0, Math.max(left.singlepath, right.singlepath)) + root.val;
+        //left or right son tree max, not include root val, could be left to right or top to bottom
+        int maxPath = Math.max(left.maxPath, right.maxPath);
+        //from left to right, include root val
+        maxPath = Math.max(maxPath, Math.max(left.singlepath, 0) + Math.max(right.singlepath, 0) + root.val);
+        return new result(singlepath, maxPath);
+        
+    }
+}
