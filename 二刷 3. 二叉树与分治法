@@ -493,3 +493,47 @@ public class Solution {
         return res;
     }
 }
+
+*********************
+这道题要注意的是需要有个list维护inorder的顺序
+95. Validate Binary Search Tree
+/**
+ * Definition of TreeNode:
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left, right;
+ *     public TreeNode(int val) {
+ *         this.val = val;
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+
+public class Solution {
+    /**
+     * @param root: The root of binary tree.
+     * @return: True if the binary tree is BST, or false
+     */
+    public boolean isValidBST(TreeNode root) {
+        // write your code here
+        List<Integer> list = new ArrayList<Integer>();  
+        list.add(null); 
+        return helper(root, list);
+    }
+    
+    private boolean helper(TreeNode root, List<Integer> list) {
+        if (root == null) {
+            return true;
+        }
+        
+        boolean left = helper(root.left, list);
+        //attention: u need to keep left < root < right, use a list and add the number inorder
+        if(list.get(list.size()-1) != null && root.val <= list.get(list.size()-1))  
+            return false;  
+        list.add(root.val); 
+        
+        boolean right = helper(root.right, list);
+        return left && right;
+    }
+}
+
