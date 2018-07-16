@@ -574,24 +574,45 @@ public class Solution {
     }
 }
 
-Inorder Successor in BST
-TreeNode inorderSuccessor(TreeNode root, TreeNode p) {  
-        if(root == null || p == null) 
-            return NULL;  
-        TreeNode ans = NULL;  
-        while(root != null)  
-        {  
-            if(root.val > p.val)  
-            {  
-                ans = root;  
-                root = root->left;  
-            }  
-            else 
-                root = root->right;  
-        }  
-        return ans;  
-    }  
-    
+448. Inorder Successor in BST
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+
+
+public class Solution {
+    /*
+     * @param root: The root of the BST.
+     * @param p: You need find the successor node of p.
+     * @return: Successor of p.
+     */
+    public TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
+        // write your code here
+        TreeNode res = null;
+        if (root == null) {
+            return res;
+        }
+        
+        while (root != null) {
+            //if current node are higher than target, search for the leftest one.
+            if (root.val > p.val) {
+                res = root;
+                root = root.left;
+            } else {
+                root = root.right;
+            }
+        }
+        
+        return res;
+    }
+}
+
 86. Binary Search Tree Iterator
 //hashmap的思维由值获取node很好
 public class BSTIterator {
