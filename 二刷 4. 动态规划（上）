@@ -156,3 +156,35 @@ public class Solution {
     }
 }
 
+111. Climbing Stairs
+public class Solution {
+    /**
+     * @param n: An integer
+     * @return: An integer
+     */
+    public int climbStairs(int n) {
+        // write your code here
+        if (n <= 0) {
+            return 0;
+        }
+        if (n == 1) {
+            return 1;
+        }
+        
+        if(n == 2) {
+            return 2;
+        }
+        //state
+        int[] dp = new int[n + 1];//加了一个空间，只是为了让1对应1级台阶
+        dp[1] = 1;
+        dp[2] = 2;
+        
+        //formula
+        for (int i = 3; i < n + 1; i++) {
+            dp[i] = dp[i - 1] + dp[i - 2];
+        }
+        
+        return dp[n];
+    }
+}
+
