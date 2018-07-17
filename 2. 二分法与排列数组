@@ -1,3 +1,5 @@
+******************************
+if and else has execution order!!!
 61. Search for a Range 
 public class Solution {
     /**
@@ -50,6 +52,7 @@ public class Solution {
                 end = mid;
             }
         }
+        //if and else has execution order!!! put end first in case A[start] = A[end] = target
         if (A[end] == target) {
             bound[1] = end;
         } else if (A[start] == target) {
