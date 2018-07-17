@@ -2,6 +2,9 @@
 二分法的应用，一开始没有想到用寻找左边界二分，然后再寻找右边界二分。
 只是想到先找到中点，然后再用另外两个指针平移，这样会有最坏情况，就是所有的数字都一样，会有最坏的情况，O(N) TLE
 二分法的精髓在于，最后会划分成只有两个数字的区间，按照要求判断即可！
+******************************
+if and else has execution order!!!
+在if-else if- else语句块中，如果所有if中的条件都为真，是每个if对应的语句都执行呢？还是只执行第一个条件为真的if对应的语句呢？答案为后者
 61. Search for a Range
 public class Solution {
     /**
@@ -54,6 +57,7 @@ public class Solution {
                 end = mid;
             }
         }
+        //if and else has execution order!!! So, judge end first cause search for right bound
         if (A[end] == target) {
             bound[1] = end;
         } else if (A[start] == target) {
