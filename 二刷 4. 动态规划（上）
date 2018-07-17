@@ -1,8 +1,8 @@
 动态规划最重要的就是记住四要素
-状态
-方程
-初始化
-答案
+*状态 dp[]...
+*方程 dp[i] = dp[i + 1]...
+*初始化 dp[0] or dp[n]..
+*答案 dp[0] or dp[n]..
 109. Triangle
 public class Solution {
     /**
