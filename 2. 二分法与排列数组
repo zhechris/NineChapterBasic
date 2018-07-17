@@ -1,5 +1,6 @@
 ******************************
 if and else has execution order!!!
+在if-else if- else语句块中，如果所有if中的条件都为真，是每个if对应的语句都执行呢？还是只执行第一个条件为真的if对应的语句呢？答案为后者
 61. Search for a Range 
 public class Solution {
     /**
