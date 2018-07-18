@@ -1,0 +1,57 @@
+******************************************
+多写几遍这道题，序列型动态规划
+特别是预处理的那一段，可以背下来
+108. Palindrome Partitioning II
+public class Solution {
+    /**
+     * @param s: A string
+     * @return: An integer
+     */
+     
+    
+    public int minCut(String s) {
+        // write your code here
+        if (s == null || s.length() == 0) {
+            return 0;
+        }
+        
+        //state
+        int[] dp = new int[s.length() + 1];//前i个字符至少切几刀为回文串
+        boolean[][] isPalindrome = getIsPalindrome(s);//预处理，减少时间复杂度
+        
+        //initialize
+        for (int i = 0; i <= s.length(); i++) {
+            dp[i] = i - 1;
+        }
+        
+        //function
+        for (int i = 1; i <= s.length(); i++) {
+            for (int j = 0; j < i; j++) {
+                if (isPalindrome[j][i - 1]) {//下标第j点到i - 1点为回文串，不能为i，因为字符串的最大下标为i - 1。
+                    dp[i] = Math.min(dp[i], dp[j] + 1);
+                }
+            }
+        }
+        return dp[s.length()];
+    }
+    
+    private boolean[][] getIsPalindrome(String s) {
+        boolean[][] isPalindrome = new boolean[s.length()][s.length()];
+
+        for (int i = 0; i < s.length(); i++) {
+            isPalindrome[i][i] = true;
+        }
+        for (int i = 0; i < s.length() - 1; i++) {
+            isPalindrome[i][i + 1] = (s.charAt(i) == s.charAt(i + 1));
+        }
+//(start (start+1                    i-1)    i)
+        for (int i = 2; i < s.length(); i++) {//区间型动态规划，背下来。外层长度，内层起点
+            for (int start = 0; start + i < s.length(); start++) {
+                isPalindrome[start][start + i]
+                    = isPalindrome[start + 1][start + i - 1] && s.charAt(start) == s.charAt(start + i);
+            }
+        }
+
+        return isPalindrome;
+    }
+}
