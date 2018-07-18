@@ -55,3 +55,51 @@ public class Solution {
         return isPalindrome;
     }
 }
+
+*************************
+这道题很上面那道题一类，都是切分序列型的dp，所以状态转移方程都和之前某个状态有关
+所以需要判断之前的状态是否成立，以及之前状态之后到当前状态是否也满足，就可以得出当前状态。
+107. Word Break
+public class Solution {
+    /*
+     * @param s: A string
+     * @param dict: A dictionary of words dict
+     * @return: A boolean
+     */
+    public boolean wordBreak(String s, Set<String> dict) {
+        // write your code here
+        if (dict.isEmpty() && s.length() == 0) {  
+            return true;
+        }
+        int maxlength = getMaxLength(dict);
+        
+        //state: 前i个单词是否能完美切分 
+        boolean[] canbreak = new boolean[s.length() + 1];
+        
+        //initialize
+        canbreak[0] = true;
+        
+        //function
+        for (int i = 1; i < s.length() + 1; i++) {//substring后一个变量不包含，所以i可以到length
+            for (int j = 0; j <= i && j <= maxlength; j++) { // j <= maxlength,切分长度大于最大的单词长度，那就没必要切分，因为肯定不在词典中
+                //i - j 表示从 i 点开始往前j个点的位置
+                String str = s.substring(i - j,i);
+                //如果此str在词典中 并且 str之前的 字符串可以拆分     
+                if(dict.contains(str) && canbreak[i - j]){
+                  canbreak[i] = true;
+                  break;
+                }
+            }
+        }
+        return canbreak[s.length()];
+    }
+    
+    //这个函数如果写进主函数会超时
+    private int getMaxLength(Set<String> dict){
+        int max = 0;
+        for(String s : dict){
+            max = Math.max(max,s.length());
+        }
+        return max;
+    }
+}
