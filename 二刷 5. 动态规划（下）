@@ -239,3 +239,48 @@ public class Solution {
     }
 }
 
+118. Distinct Subsequences
+public class Solution {
+    /*
+     * @param : A string
+     * @param : A string
+     * @return: Count the number of distinct subsequences
+     */
+    public int numDistinct(String S, String T) {
+        // write your code here
+        if (T.length() > S.length()) {
+            return 0;
+        }
+        
+        int n = S.length();
+        int m = T.length();
+        
+        //state: 从S的前i个取子字符串为T的前j个字符串的个数
+        int[][] dp = new int[n + 1][m + 1];
+        
+        //initialize
+        //从s中取出空串的方案
+        dp[0][0] = 1;
+        for (int i = 0; i <= n; i++) {
+            dp[i][0] = 1;
+        }
+        
+        //function
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= m; j++) {
+                //第i个和第j个相等，如果取当前的i，则要求dp[i - 1][j - 1]
+                //如果不要当前的i，则子字符串j与前i - 1有关
+                if (S.charAt(i - 1) == T.charAt(j - 1)) {
+                    dp[i][j] = dp[i - 1][j] + dp[i - 1][j - 1];
+                } else {
+                    dp[i][j] = dp[i - 1][j];
+                }
+            }
+        }
+        
+        return dp[n][m];
+        
+    }
+}
+
+
