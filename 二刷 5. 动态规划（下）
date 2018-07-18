@@ -159,3 +159,46 @@ public class Solution {
         return dp[n][m];
     }
 }
+
+这道题和上道题目几乎一样，只是相等的dp[4][4]只和dp[3][3]有关
+79. Longest Common Substring
+public class Solution {
+    /**
+     * @param A: A string
+     * @param B: A string
+     * @return: the length of the longest common substring.
+     */
+    public int longestCommonSubstring(String A, String B) {
+        // write your code here
+        if (A == null && B == null) {
+            return 0;
+        }
+        
+        int n = A.length();
+        int m = B.length();
+        
+        //state:A's frist i elements and B's first j elements LCS
+        int[][] dp = new int[n + 1][m + 1];
+        
+        dp[0][0] = 0;
+        
+        //function
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= m; j++) {
+                if (A.charAt(i - 1) == B.charAt(j - 1)) {
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                } else {
+                    dp[i][j] = 0;
+                }
+            }
+        }
+        
+        int max = 0;
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= m; j++) {
+                max = Math.max(max, dp[i][j]);
+            }
+        }
+        return max;
+    }
+}
