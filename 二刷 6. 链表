@@ -40,3 +40,69 @@ public class Solution {
         return dummy.next;
     }
 }
+
+******************************
+再写一遍，return 存疑，一刷写的return null也可以通过
+36. Reverse Linked List II
+/**
+ * Definition for ListNode
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+
+public class Solution {
+    /**
+     * @param head: ListNode head is the head of the linked list 
+     * @param m: An integer
+     * @param n: An integer
+     * @return: The head of the reversed ListNode
+     */
+    public ListNode reverseBetween(ListNode head, int m, int n) {
+        // write your code here
+        if (head == null || m >= n) {
+            return head;
+        }
+        
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        head = dummy;
+        
+        //search for m start
+        for (int i = 1; i < m; i++) {
+            if (head == null) {
+                return dummy.next;
+            }
+            head = head.next; // reach to m - 1
+        }
+        
+        //assign for first part and last part
+        ListNode premNode = head;
+        ListNode mNode = head.next;
+        ListNode nNode = mNode;
+        ListNode postnNode = nNode.next;
+        
+        //reverse m - n part
+        for (int i = m; i < n; i++) {
+            if (postnNode == null) {
+                return dummy.next;
+            }
+            
+            ListNode temp = postnNode.next;
+            postnNode.next = nNode;//postn相当于curt，n相当于pre
+            nNode = postnNode;//移动
+            postnNode = temp;//移动
+        }
+        
+        //connect first, mid, and last parts
+        mNode.next = postnNode;//m指向n+1，m-1指向n
+        premNode.next = nNode;
+        
+        return dummy.next;
+    }
+}
