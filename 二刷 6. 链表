@@ -42,7 +42,7 @@ public class Solution {
 }
 
 ******************************
-再写一遍，return 存疑，一刷写的return null也可以通过
+再写一遍，return 存疑，一刷写的return null也可以通过，可能是m永远没有越界
 36. Reverse Linked List II
 /**
  * Definition for ListNode
