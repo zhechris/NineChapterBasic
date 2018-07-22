@@ -277,3 +277,66 @@ public class Solution {
         return slow;
     }
 }
+
+
+104. Merge K Sorted Lists
+/**
+ * Definition for ListNode.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int val) {
+ *         this.val = val;
+ *         this.next = null;
+ *     }
+ * }
+ */ 
+public class Solution {
+    /**
+     * @param lists: a list of ListNode
+     * @return: The head of one sorted list.
+     */
+    public ListNode mergeKLists(List<ListNode> lists) {  
+        // write your code here
+        if (lists == null || lists.size() == 0) {
+            return null;
+        }
+        return mergeHelper(lists, 0, lists.size() - 1);
+    }
+    
+    public ListNode mergeHelper(List<ListNode> lists, int start, int end) {
+        if (start == end) {
+            return lists.get(start);
+        }
+        
+        int mid = start + (end - start) / 2;
+        
+        ListNode left = mergeHelper(lists, start, mid);
+        ListNode right = mergeHelper(lists, mid + 1, end);
+        return mergeTwo(left, right);
+    }
+    
+    public ListNode mergeTwo(ListNode head1, ListNode head2) {
+        
+        ListNode dummy = new ListNode(0);
+        ListNode head = dummy;//store the first fake head
+        while (head1 != null && head2 != null) {
+            if (head1.val < head2.val) {
+                dummy.next = head1;
+                head1 = head1.next;
+            } else {
+                dummy.next = head2;
+                head2 = head2.next;
+            }
+            dummy = dummy.next;
+        }
+        
+        if (head1 != null) {
+            dummy.next = head1;
+        }
+        if (head2 != null) {
+            dummy.next = head2;
+        }
+        return head.next;
+    }
+}
