@@ -125,3 +125,43 @@ public class Solution {
         }
     }
 }
+
+6. Merge Two Sorted Arrays
+public class Solution {
+    /**
+     * @param A: sorted integer array A
+     * @param B: sorted integer array B
+     * @return: A new sorted integer array
+     */
+    public int[] mergeSortedArray(int[] A, int[] B) {
+        // write your code here
+        if (A == null || B == null) {
+            return null;
+        }
+        
+        int m = A.length;
+        int n = B.length;
+        
+        int[] res = new int[m + n];
+        
+        int index = 0;
+        int i = 0;
+        int j = 0;
+        while (i < m && j < n) {
+            if (A[i] < B[j]) {
+                res[index++] = A[i++];
+            } else {
+                res[index++] = B[j++];
+            }
+        }
+        
+        while (i < m) {
+            res[index++] = A[i++];
+        }
+        
+        while (j < n) {
+            res[index++] = B[j++];
+        }
+        return res;
+    }
+}
