@@ -321,3 +321,40 @@ public class Solution {
         return profit;
     }
 }
+
+
+//记住怎么保证小的在大的之前，就用这种滑动的方式，永远保证最小值在当前值之前
+        for(int i = 1; i < presum.length; i++){
+            res = Math.max(res, presum[i] - minpresum);
+            minpresum = Math.min(minpresum, presum[i]);
+        }
+41. Maximum Subarray
+public class Solution {
+    /**
+     * @param nums: A list of integers
+     * @return: A integer indicate the sum of max subarray
+     */
+    public int maxSubArray(int[] nums) {
+        // write your code here
+        int res = Integer.MIN_VALUE;;
+        if (nums == null || nums.length == 0) {
+            return res;
+        }
+        
+        int[] presum = new int[nums.length + 1];
+        presum[0] = 0;
+        
+        for (int i = 1; i < presum.length; i++) {
+            presum[i] = presum[i - 1] + nums[i - 1];
+        }
+        
+        int minpresum = 0;
+        //记住怎么保证小的在大的之前，就用这种滑动的方式，永远保证最小值在当前值之前
+        for(int i = 1; i < presum.length; i++){
+            res = Math.max(res, presum[i] - minpresum);
+            minpresum = Math.min(minpresum, presum[i]);
+        }
+        
+        return res;
+    }
+}
