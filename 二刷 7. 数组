@@ -401,3 +401,31 @@ public class Solution {
         return max;
     }
 }
+
+
+44. Minimum Subarray
+public class Solution {
+    /*
+     * @param nums: a list of integers
+     * @return: A integer indicate the sum of minimum subarray
+     */
+    public int minSubArray(List<Integer> nums) {
+        // write your code here
+        int res = Integer.MAX_VALUE;
+        if (nums == null || nums.size() == 0) {
+            return res;
+        }
+        
+        int sum = 0;
+        int maxsum = 0;
+        
+        
+        for (int i = 0; i < nums.size(); i++) {
+            sum += nums.get(i);
+            res = Math.min(res, sum - maxsum);
+            maxsum = Math.max(maxsum, sum);
+        }
+        
+        return res;
+    }
+}
