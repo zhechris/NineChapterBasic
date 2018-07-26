@@ -358,3 +358,46 @@ public class Solution {
         return res;
     }
 }
+
+***********************
+这道题和前面股票III最大的区别就是，股票最低利润为0而这个可以为负数。
+所以前后各取0是不对的，另外就是，因为不是股票，所有从右往左加和不存在先后顺序，可以用从左往右的方法。
+42. Maximum Subarray II
+public class Solution {
+    /*
+     * @param nums: A list of integers
+     * @return: An integer denotes the sum of max two non-overlapping subarrays
+     */
+    public int maxTwoSubArrays(List<Integer> nums) {
+        int size = nums.size();
+        int[] left = new int[size];
+        int[] right = new int[size];
+        
+        int sum = 0;
+        int minSum = 0;
+        int max = Integer.MIN_VALUE;
+        for(int i = 0; i < size; i++){
+            sum += nums.get(i);
+            max = Math.max(max, sum - minSum);
+            minSum = Math.min(sum, minSum);
+            left[i] = max;
+        }
+        
+        sum = 0;
+        minSum = 0;
+        max = Integer.MIN_VALUE;
+        //因为不是股票，所以不存在先后顺序
+        for(int i = size - 1; i >= 0; i--){
+            sum += nums.get(i);
+            max = Math.max(max, sum - minSum);
+            minSum = Math.min(sum, minSum);
+            right[i] = max;
+        }
+        /*这个题的思路是，因为 两个subarray 一定不重叠,所以必定存在一条分割线分开这两个 subarrays,枚举分割线的位置*/
+        max = Integer.MIN_VALUE;
+        for(int i = 0; i < size - 1; i++){
+            max = Math.max(max, left[i] + right[i + 1]);
+        }
+        return max;
+    }
+}
