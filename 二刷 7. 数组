@@ -235,3 +235,24 @@ public class Solution {
     }
 }
 
+一刷：
+public class Solution {
+    /**
+     * @param prices: Given an integer array
+     * @return: Maximum profit
+     */
+    public int maxProfit(int[] prices) {
+        // write your code here
+        int res = 0;
+        if (prices == null || prices.length == 0) {
+            return res;
+        }
+        
+        int min = Integer.MAX_VALUE;
+        for (int i : prices) {
+            min = i < min ? i : min;
+            res = res < i - min ? i - min : res;
+        }
+        return res;
+    }
+}
