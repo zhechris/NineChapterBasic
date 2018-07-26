@@ -206,3 +206,32 @@ public class Solution {
         }
     }
 }
+
+
+*************************
+这道题可以单层循环解决的，二刷用的简单粗暴的算法，下次重写
+149. Best Time to Buy and Sell Stock
+二刷：
+public class Solution {
+    /**
+     * @param prices: Given an integer array
+     * @return: Maximum profit
+     */
+    public int maxProfit(int[] prices) {
+        // write your code here
+        int res = 0;
+        if (prices == null || prices.length == 0) {
+            return res;
+        }
+        
+        for (int i = 0; i < prices.length - 1; i++) {
+            for (int j = i + 1; j < prices.length; j++) {
+                if (prices[j] - prices[i] > res) {
+                    res = prices[j] - prices[i];
+                }
+            }
+        }
+        return res;
+    }
+}
+
