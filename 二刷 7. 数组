@@ -832,3 +832,32 @@ public class Solution {
         }
     }
 }
+
+还是没有背下来，下次一定背下来
+148. Sort Colors
+inplace的方法，背下来
+class Solution {
+    public void sortColors(int[] nums) {
+        int i = -1;
+        int j = -1;
+        int k = -1;
+        int n=nums.length;
+        for(int p = 0; p < n; p ++)
+        {
+            //根据第i个数字，挪动0~i-1串。
+            if(nums[p] == 0)
+            {
+                nums[++k] = 2;    //2往后挪
+                nums[++j] = 1;    //1往后挪
+                nums[++i] = 0;    //0往后挪
+            }
+            else if(nums[p] == 1)
+            {
+                nums[++k] = 2;
+                nums[++j] = 1;
+            }
+            else
+                nums[++k] = 2;
+        }
+    }
+}
