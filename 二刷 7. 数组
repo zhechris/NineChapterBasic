@@ -619,3 +619,50 @@ public class Solution {
         return res;
     }
 }
+
+
+57. 3Sum
+public class Solution {
+    /**
+     * @param numbers: Give an array numbers of n integer
+     * @return: Find all unique triplets in the array which gives the sum of zero.
+     */
+    public List<List<Integer>> threeSum(int[] numbers) {
+        // write your code here
+        List<List<Integer>> res = new ArrayList<>();
+        if (numbers.length < 3) {
+            return res;
+        }
+        
+        Arrays.sort(numbers);
+        
+        Set<List<Integer>> set=new HashSet<>();//in case the depulicate list added
+        
+        for (int i = 0; i < numbers.length - 2; i++) {
+            int left = i + 1;
+            int right = numbers.length - 1;
+            
+            while (left < right) {
+                if (numbers[left] + numbers[right] + numbers[i] == 0) {
+                    List<Integer> list = new ArrayList<>();
+                    list.add(numbers[i]);
+                    list.add(numbers[left]);
+                    list.add(numbers[right]);
+                    if (!set.contains(list)) {
+                        set.add(list);
+                        res.add(list);
+                    }
+                    
+                    left++;
+                    right--;
+                } else if (numbers[left] + numbers[right] + numbers[i] > 0) {
+                    right--;
+                } else {
+                    left++;
+                }
+            }
+        }
+        
+        return res;
+    }
+}
