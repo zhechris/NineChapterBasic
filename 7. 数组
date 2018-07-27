@@ -628,7 +628,7 @@ class Solution {
         List<List<Integer>> list=new ArrayList<>();
         if(nums.length<3||nums==null)
             return list;
-        HashSet<ArrayList<Integer>> set=new HashSet<>();//in case the depulicate list added
+        Set<List<Integer>> set=new HashSet<>();//in case the depulicate list added
         Arrays.sort(nums);
         for(int i=0;i<nums.length-2;i++){
             int low=i+1;//双指针的办法
