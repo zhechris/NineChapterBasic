@@ -1,0 +1,46 @@
+这道题无关乎算法，而是这种思路的设计值得多写几遍
+
+12. Min Stack
+public class MinStack {
+    private Stack<Integer> stack = new Stack<>();
+    private Stack<Integer> minStack = new Stack<>();
+    
+    public MinStack() {
+        // do intialization if necessary
+    }
+
+    /*
+     * @param number: An integer
+     * @return: nothing
+     */
+    public void push(int number) {
+        // write your code here
+        stack.push(number);
+        if (minStack.isEmpty()) {
+            minStack.push(number);
+        } else {
+            if (minStack.peek() >= number) {// 这里考虑的相等的情况也会继续push
+                minStack.push(number);
+            }
+        }
+    }
+
+    /*
+     * @return: An integer
+     */
+    public int pop() {
+        // write your code here
+        if (stack.peek().equals(minStack.peek())) {//两个栈顶的元素相同，如果要pop，最小栈也要pop，因为这个元素已经删除了，所以也要从最小栈删除
+            minStack.pop();
+        }
+        return stack.pop();
+    }
+
+    /*
+     * @return: An integer
+     */
+    public int min() {
+        // write your code here
+        return minStack.peek();
+    }
+}
