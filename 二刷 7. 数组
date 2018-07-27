@@ -666,3 +666,44 @@ public class Solution {
         return res;
     }
 }
+
+*********************************************
+多加个if的事情，又tmd把自己写晕了
+59. 3Sum Closest
+public class Solution {
+    /**
+     * @param numbers: Give an array numbers of n integer
+     * @param target: An integer
+     * @return: return the sum of the three integers, the sum closest target.
+     */
+    public int threeSumClosest(int[] numbers, int target) {
+        // write your code here
+        int res = 0;
+        if (numbers.length < 3 || numbers == null) {
+            return res;
+        }
+        
+        Arrays.sort(numbers);
+        int diff = Integer.MAX_VALUE;
+        for (int i = 0; i < numbers.length; i++) {
+            int left = i + 1;
+            int right = numbers.length - 1;
+            while (left < right) {
+                int sum = numbers[i] + numbers[left] + numbers[right];
+                if (Math.abs(sum - target) < diff) {
+                    diff = Math.abs(sum - target);
+                    res = sum;
+                }
+                if (sum == target) {
+                    return target;
+                } else if (sum < target) {
+                    left++;
+                } else {
+                    right--;
+                }
+            }
+        }
+        
+        return res;
+    }
+}
