@@ -44,3 +44,100 @@ public class MinStack {
         return minStack.peek();
     }
 }
+
+40. Implement Queue by Two Stacks
+二刷：两个stacks来回倒腾数据，每次push都要保证把第二个stack里面的数据先加入到stack1中去，然后再加入数据，
+这样可以保证pop和top时候从stack1中加入到stack2的顺序性，但是有很多的重复的操作，不如一刷好。
+public class MyQueue {
+    private Stack<Integer> stack1;
+    private Stack<Integer> stack2;
+    
+    public MyQueue() {
+        // do intialization if necessary
+        stack1 = new Stack<>();
+        stack2 = new Stack<>();
+    }
+
+    /*
+     * @param element: An integer
+     * @return: nothing
+     */
+    public void push(int element) {
+        // write your code here
+        while (!stack2.isEmpty()) {
+            stack1.push(stack2.pop());
+        }
+        stack1.push(element);
+    }
+
+    /*
+     * @return: An integer
+     */
+    public int pop() {
+        // write your code here
+        while (!stack1.isEmpty()) {
+            stack2.push(stack1.pop());
+        }
+        return stack2.pop();
+    }
+
+    /*
+     * @return: An integer
+     */
+    public int top() {
+        // write your code here
+        while (!stack1.isEmpty()) {
+            stack2.push(stack1.pop());
+        }
+        return stack2.peek();
+    }
+}
+
+一刷：
+拿一个stack1永远作为push 的stack，当stack2为空的时候，说明stack2没有元素可以pop或者top了，
+就把stack1中的元素都加进去，可以减少很多不必要的倒腾
+public class MyQueue {
+    private Stack<Integer> stack1;
+    private Stack<Integer> stack2;
+    
+    public MyQueue() {
+        // do intialization if necessary
+        stack1 = new Stack<>();
+        stack2 = new Stack<>();
+    }
+
+    /*
+     * @param element: An integer
+     * @return: nothing
+     */
+    public void push(int element) {
+        // write your code here
+        stack1.push(element);
+    }
+
+    /*
+     * @return: An integer
+     */
+    public int pop() {
+        // write your code here
+        if (stack2.isEmpty()) {
+            while (!stack1.isEmpty()) {
+                stack2.push(stack1.pop());
+            }
+        }
+        return stack2.pop();
+    }
+
+    /*
+     * @return: An integer
+     */
+    public int top() {
+        // write your code here
+        if (stack2.isEmpty()) {
+            while (!stack1.isEmpty()) {
+                stack2.push(stack1.pop());
+            }
+        }
+        return stack2.peek();
+    }
+}
