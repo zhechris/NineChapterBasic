@@ -588,3 +588,34 @@ public class Solution {
         return result;
     }
 }
+
+这道题当然也可以用双指针的办法，但是要注意排序后index会发生变化
+56. Two Sum
+public class Solution {
+    /**
+     * @param numbers: An array of Integer
+     * @param target: target = numbers[index1] + numbers[index2]
+     * @return: [index1, index2] (index1 < index2)
+     */
+    public int[] twoSum(int[] numbers, int target) {
+        // write your code here
+        int[] res = new int[2];
+        if (numbers.length < 1) {
+            return res;
+        }
+        
+        Map<Integer, Integer> map = new HashMap<>();
+        
+        for (int i = 0; i < numbers.length; i++) {
+            int num = target - numbers[i];
+            if (map.containsKey(num)) {
+                res[0] = map.get(num);
+                res[1] = i;
+                return res;
+            } else {
+                map.put(numbers[i], i);
+            }
+        }
+        return res;
+    }
+}
