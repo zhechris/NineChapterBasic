@@ -278,3 +278,102 @@ class Solution {
         return newTable;
     }
 }
+
+
+这道题写不出来是正常的-。-
+doubly linked list + hashmap
+
+134. LRU Cache
+public class LRUCache {
+    /*
+    * @param capacity: An integer
+    */
+    class Node {
+        int key;
+        int value;
+        Node next;
+        Node pre;
+        Node(int key, int value) {
+            this.key = key;
+            this.value = value;
+        }
+    }
+    int capacity;
+    Map<Integer, Node> map = new HashMap<>();
+    Node head = null;
+    Node end = null;
+    
+    public LRUCache(int capacity) {
+        // do intialization if necessary
+        this.capacity =capacity;
+    }
+
+    /*
+     * @param key: An integer
+     * @return: An integer
+     */
+    public int get(int key) {
+        // write your code here
+        if (map.containsKey(key)) {
+            Node n = map.get(key);
+            remove(n);
+            setHead(n);//latest visited always put in the head
+            return n.value;
+        }
+ 
+        return -1;
+    }
+    
+    public void remove(Node n) {
+        //n 是否是头结点
+        if(n.pre != null) {
+            n.pre.next = n.next;
+        } else {
+            head = n.next;
+        }
+        //n 是否是尾结点
+        if(n.next != null) {
+            n.next.pre = n.pre;
+        } else {
+            end = n.pre;
+        }
+    }
+    
+    public void setHead(Node n) {
+        n.next = head;
+        n.pre = null;
+        
+        if(head != null)
+            head.pre = n;//将原来的头结点和当前点连接起来
+ 
+        head = n;
+
+        if(end == null)//没有元素
+            end = head;
+    }
+    /*
+     * @param key: An integer
+     * @param value: An integer
+     * @return: nothing
+     */
+    public void set(int key, int value) {
+        // write your code here
+        if (map.containsKey(key)) {
+            Node old = map.get(key);
+            old.value = value;
+            remove(old);
+            setHead(old);
+        } else {
+            Node created = new Node(key, value);
+            if (map.size() >= capacity) {
+                map.remove(end.key); //key放在node里面的原因
+                remove(end);
+                setHead(created);
+            } else {
+                setHead(created);
+            }    
+            map.put(key, created);
+        }
+        
+    }
+}
