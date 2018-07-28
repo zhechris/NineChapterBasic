@@ -170,3 +170,63 @@ public class Solution {
         return max;
     }
 }
+
+126. Max Tree
+Given an integer array with no duplicates. A max tree building on this array is defined as follow:
+- The root is the maximum number in the array. 
+- The left subtree and right subtree are the max trees of the subarray divided by the root number. 
+- Construct the max tree by the given array.
+
+Example 
+Given [2, 5, 6, 0, 3, 1], the max tree constructed by this array is:
+    6
+   / \
+  5   3
+ /   / \
+2   0   1
+
+Challenge 
+O(n) time and memory.
+//其实就是笛卡尔数，满足两个性质
+树中的元素满足二叉搜索树性质，要求按照中序遍历得到的序列为原数组序列
+树中节点满足堆性质，节点的key值要大于其左右子节点的key值
+
+/**
+ * Definition of TreeNode:
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left, right;
+ *     public TreeNode(int val) {
+ *         this.val = val;
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+public class Solution {
+    /**
+     * @param A: Given an integer array with no duplicates.
+     * @return: The root of max tree.
+     */
+    public TreeNode maxTree(int[] A) {
+        if (A == null || A.length == 0) {
+            return null;
+        }
+        LinkedList<TreeNode> stack = new LinkedList<TreeNode>();
+        for (int i = 0; i < A.length; i++) {
+            TreeNode curt = new TreeNode(A[i]);
+            // use while to find the max left node of curt
+            while (!stack.isEmpty() && curt.val > stack.peek().val) {
+                curt.left = stack.pop(); //根据BST性质，之前放进去的应该放在当前点的左边
+            }
+            if (!stack.isEmpty()) { //将push进去的点作为右子树和之前的点连接起来
+                stack.peek().right = curt;//因为要满足BST的性质，所以后加进去的点都放在右边
+            }
+            stack.push(curt);
+        }
+        TreeNode result = new TreeNode(0);
+        while (!stack.isEmpty()) {
+            result = stack.pop();
+        }
+        return result;
+    }
+}
