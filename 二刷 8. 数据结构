@@ -716,6 +716,8 @@ public class Solution {
 }
 
 来个简单的题目，II放到后面的trie中去
+123. Word Search
+
 public class Solution {
     public static int[] dx = {0,0,-1,1};
     public static int[] dy = {1,-1,0,0};
