@@ -485,3 +485,40 @@ public class Solution {
         
     }
 }
+
+题目并不是很难，但是用到了容器里面的一些方法，所以还是值得再写写的
+add是将传入的参数作为当前List中的一个Item存储，即使你传入一个List也只会另当前的List增加1个元素
+addAll是传入一个List，将此List中的所有元素加入到当前List中，也就是当前List会增加的元素个数为传入的List的大小
+171. Anagrams
+public class Solution {
+    /**
+     * @param strs: A list of strings
+     * @return: A list of strings
+     */
+    public List<String> anagrams(String[] strs) {
+        // write your code here
+        List<String> res = new ArrayList<>();
+        if (strs == null || strs.length == 0) {
+            return res;
+        }
+        
+        Map<String, List<String>> map = new HashMap<>();
+        for (String str : strs) {
+            char[] ch = str.toCharArray();
+            Arrays.sort(ch);
+            String s = String.valueOf(ch);
+            if (!map.containsKey(s)) {
+                map.put(s, new ArrayList<>());
+            }
+            map.get(s).add(str);
+        }
+        
+        for (String key : map.keySet()) {
+            if (map.get(key).size() >= 2)
+                res.addAll(map.get(key));
+        }
+        
+        return res;
+    }
+}
+
