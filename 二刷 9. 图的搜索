@@ -1,0 +1,85 @@
+137. Clone Graph
+/**
+ * Definition for undirected graph.
+ * class UndirectedGraphNode {
+ *     int label;
+ *     ArrayList<UndirectedGraphNode> neighbors;
+ *     UndirectedGraphNode(int x) { label = x; neighbors = new ArrayList<UndirectedGraphNode>(); }
+ * };
+ */
+
+
+public class Solution {
+    /*
+     * @param node: A undirected graph node
+     * @return: A undirected graph node
+     */
+    public UndirectedGraphNode cloneGraph(UndirectedGraphNode node) {
+        // write your code here
+        if (node == null) {
+            return node;
+        }
+        //use map to store all the nodes
+        Map<UndirectedGraphNode, UndirectedGraphNode> map = new HashMap<>();
+        Queue<UndirectedGraphNode> queue = new LinkedList<>();
+        
+        UndirectedGraphNode newNode = new UndirectedGraphNode(node.label);
+        map.put(node, newNode);
+        queue.offer(node);
+        
+        while (!queue.isEmpty()) {
+            UndirectedGraphNode top = queue.poll();
+            List<UndirectedGraphNode> neighbors = top.neighbors;
+            for (UndirectedGraphNode neighbor : neighbors) {
+                if (!map.containsKey(neighbor)) {
+                    map.put(neighbor, new UndirectedGraphNode(neighbor.label));
+                    queue.offer(neighbor);
+                }
+                
+                map.get(top).neighbors.add(map.get(neighbor));
+            }
+        }
+        return newNode;
+    }
+}
+
+105. Copy List with Random Pointer
+/**
+ * Definition for singly-linked list with a random pointer.
+ * class RandomListNode {
+ *     int label;
+ *     RandomListNode next, random;
+ *     RandomListNode(int x) { this.label = x; }
+ * };
+ */
+public class Solution {
+    /**
+     * @param head: The head of linked list with a random pointer.
+     * @return: A new head of a deep copy of the list.
+     */
+    public RandomListNode copyRandomList(RandomListNode head) {
+        // write your code here
+        
+        if (head == null) {// edge case
+            return null;
+        }
+        
+        Map<RandomListNode, RandomListNode> map = new HashMap<>();
+        RandomListNode dummy = new RandomListNode(0);
+        dummy.next = head;
+        //copy nodes
+        while (head != null) {
+            map.put(head, new RandomListNode(head.label));
+            head = head.next;
+        }
+        head = dummy.next;
+        //copy links
+        while (head != null) {
+            map.get(head).next = map.get(head.next);
+            map.get(head).random = map.get(head.random);
+            head = head.next;
+        }
+        
+        return map.get(dummy.next);
+    }
+}
