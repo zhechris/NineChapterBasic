@@ -1,3 +1,4 @@
+没写出来
 137. Clone Graph
 /**
  * Definition for undirected graph.
@@ -84,7 +85,7 @@ public class Solution {
     }
 }
 
-
+没写出来，要考虑入度
 127. Topological Sorting
 /**
  * Definition for Directed graph.
@@ -141,5 +142,45 @@ public class Solution {
             }
         } 
         return res;
+    }
+}
+
+//写错了，为什么呢？因为总是想着下次递归进去start+1，这样会忽视一种情况就是0, 1 和1, 0。所以必须每次都从0
+15. Permutations
+public class Solution {
+    /*
+     * @param nums: A list of integers.
+     * @return: A list of permutations.
+     */
+    public List<List<Integer>> permute(int[] nums) {
+        // write your code here
+        List<List<Integer>> res = new ArrayList<>();
+        
+        if(nums == null){
+            return res;
+        }
+        if(nums.length == 0){
+            res.add(new ArrayList<Integer>());
+            return res;
+        }
+        List<Integer> temp = new ArrayList<Integer>();
+        dfs(res, nums, temp);
+        return res;
+    }
+    public void dfs(List<List<Integer>> res, int[] nums, List<Integer>temp){
+        if(temp.size() == nums.length){
+            res.add(new ArrayList<>(temp));
+            return;
+        }
+        
+        for(int i = 0; i < nums.length; i++){
+            if (temp.contains(nums[i])) {// make sure next loop won't add same number
+                continue;
+            }
+            temp.add(nums[i]);
+            dfs(res, nums, temp);
+            temp.remove(temp.size() - 1);
+        }
+        return;// void函数隐式存在return
     }
 }
