@@ -190,6 +190,7 @@ public class Solution {
 }
 
 求子集，时间复杂度O(2^n) 决策树 画出来就知道了 也可以归纳总结 solve n = 1需要2， solve n = 2需要4
+注意传值和传参的区别
 17. Subsets
 public class Solution {
     /**
@@ -219,7 +220,7 @@ public class Solution {
     
     public void dfs(int[] nums, List<List<Integer>> res, List<Integer> list, int length, int start) {
         if (list.size() == length) {
-            res.add(new ArrayList<Integer>(list)); //注意不能用res.add(list); 
+            res.add(new ArrayList<Integer>(list)); //注意不能用res.add(list) 因为java是pass by value，所以要copy一份
         }
         
         for(int i = start; i < nums.length; i++){
