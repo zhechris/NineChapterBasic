@@ -146,6 +146,10 @@ public class Solution {
 }
 
 //写错了，为什么呢？因为总是想着下次递归进去start+1，这样会忽视一种情况就是0, 1 和1, 0。所以必须每次都从0
+注意看看时间复杂度和subset对比
+递归层数为n
+每层循环n
+时间复杂度O(n^n)
 15. Permutations
 public class Solution {
     /*
@@ -182,5 +186,48 @@ public class Solution {
             temp.remove(temp.size() - 1);
         }
         return;// void函数隐式存在return
+    }
+}
+
+求子集，时间复杂度O(n！)
+17. Subsets
+public class Solution {
+    /**
+     * @param nums: A set of numbers
+     * @return: A list of lists
+     */
+    public List<List<Integer>> subsets(int[] nums) {
+        // write your code here
+        List<List<Integer>> res = new ArrayList<>();
+        
+        if (nums == null) {
+            return res;
+        }
+        
+        if (nums.length == 0) {
+            res.add(new ArrayList<>());
+            return res;
+        }
+        
+        Arrays.sort(nums);
+        int length = 0;
+        int start = 0;
+        List<Integer> list = new ArrayList<>();
+        dfs(nums, res, list, length, start);
+        return res;
+    }
+    
+    public void dfs(int[] nums, List<List<Integer>> res, List<Integer> list, int length, int start) {
+        if (list.size() == length) {
+            res.add(new ArrayList<Integer>(list)); //必须加new，因为list每次都会被扒光，所以传不进来
+            //return;
+        }
+        
+        for(int i = start; i < nums.length; i++){
+            list.add(nums[i]);
+            dfs(nums, res, list, length + 1, i + 1);
+            list.remove(list.size() - 1);
+            
+        }
     }
 }
