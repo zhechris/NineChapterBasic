@@ -228,6 +228,7 @@ public class Solution {
             //注意不能用res.add(list) 因为java是pass by value，所以在不停的copy同一个对象的reference
             //但是这个对象最后是空，所有的reference指向同一个对象。而这个对象最后为空，所以全是空。
             //但是如果在这中间过程中, new了一个新对象，那么传进去的是新对象的reference，相当于把改变的过程每次都copy一份保存了起来
+            //比如说你在main函数list中添加一个值，那么最后输出永远都是这个值
         }
         
         for(int i = start; i < nums.length; i++){
