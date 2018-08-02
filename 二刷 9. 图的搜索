@@ -191,6 +191,10 @@ public class Solution {
 
 求子集，时间复杂度O(2^n) 决策树 画出来就知道了 也可以归纳总结 solve n = 1需要2， solve n = 2需要4
 注意传值和传参的区别
+res.add(new ArrayList<Integer>(list)); 
+            //注意不能用res.add(list) 因为java是pass by value，所以在不停的copy同一个对象的reference
+            //但是这个对象最后是空，所有的reference指向同一个对象。而这个对象最后为空，所以全是空。
+            //但是如果在这中间过程中, new了一个新对象，那么传进去的是新对象的reference，相当于把改变的过程每次都copy一份保存了起来
 17. Subsets
 public class Solution {
     /**
@@ -220,7 +224,10 @@ public class Solution {
     
     public void dfs(int[] nums, List<List<Integer>> res, List<Integer> list, int length, int start) {
         if (list.size() == length) {
-            res.add(new ArrayList<Integer>(list)); //注意不能用res.add(list) 因为java是pass by value，所以要copy一份
+            res.add(new ArrayList<Integer>(list)); 
+            //注意不能用res.add(list) 因为java是pass by value，所以在不停的copy同一个对象的reference
+            //但是这个对象最后是空，所有的reference指向同一个对象。而这个对象最后为空，所以全是空。
+            //但是如果在这中间过程中, new了一个新对象，那么传进去的是新对象的reference，相当于把改变的过程每次都copy一份保存了起来
         }
         
         for(int i = start; i < nums.length; i++){
