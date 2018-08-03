@@ -240,3 +240,59 @@ public class Solution {
         }
     }
 }
+
+
+33. N-Queens
+public class Solution {
+    /*
+     * @param n: The number of queens
+     * @return: All distinct solutions
+     */
+    public List<List<String>> solveNQueens(int n) {
+        // write your code here
+        List<List<String>> res = new ArrayList<>();
+        if (n <= 0) {
+            return null;
+        }
+        //index represents row; value represents the cloumn, where you place the queen
+        int[] colVal = new int[n];
+        dfs(n, res, 0, colVal);
+        return res;
+    }
+    
+    public void dfs(int n, List<List<String>> res, int row, int[] colVal) {
+        if (row == n) {
+            List<String> unit = new ArrayList<>();
+            for (int i = 0; i < n; i++) {
+                StringBuilder sb = new StringBuilder();
+                for (int j = 0; j < n; j++) {
+                    if (colVal[i] == j) {
+                        sb.append('Q');
+                    } else {
+                        sb.append('.');
+                    }
+                }
+                unit.add(sb.toString());
+            }
+            res.add(unit);
+            return;
+        }
+        
+        //遍历所有的情况，一次把皇后放在所有的列
+        for (int i = 0; i < n; i++) {
+            colVal[row] = i;
+            if(isValid(row, colVal)) {
+                dfs(n, res, row + 1, colVal);
+            }
+        }
+    }
+    
+    public boolean isValid(int row, int[] colVal) {
+        for (int i = 0; i < row; i++) {
+            if (colVal[i] == colVal[row] || Math.abs(colVal[i] - colVal[row]) == row - i) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
