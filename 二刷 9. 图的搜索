@@ -296,3 +296,48 @@ public class Solution {
         return true;
     }
 }
+
+
+18. Subsets II
+public class Solution {
+    /**
+     * @param nums: A set of numbers.
+     * @return: A list of lists. All valid subsets.
+     */
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        // write your code here
+        List<List<Integer>> res = new ArrayList<>();
+        
+        if (nums == null) {
+            return res;
+        }
+        
+        if (nums.length == 0) {
+            res.add(new ArrayList<>());
+            return res;
+        }
+        
+        Arrays.sort(nums);
+        int length = 0;
+        int start = 0;
+        List<Integer> list = new ArrayList<>();
+        dfs(nums, res, list, length, start);
+        return res;
+    }
+    
+    public void dfs(int[] nums, List<List<Integer>> res, List<Integer> list, int length, int start) {
+        if (list.size() == length) {
+            res.add(new ArrayList<Integer>(list)); 
+        }
+        
+        for(int i = start; i < nums.length; i++){
+            if(i != start && nums[i] == nums[i - 1]){
+                continue;
+            }
+            list.add(nums[i]);
+            dfs(nums, res, list, length + 1, i + 1);
+            list.remove(list.size() - 1);
+            
+        }
+    }
+}
