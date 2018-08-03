@@ -341,3 +341,47 @@ public class Solution {
         }
     }
 }
+
+136. Palindrome Partitioning
+public class Solution {
+    /*
+     * @param s: A string
+     * @return: A list of lists of string
+     */
+    public List<List<String>> partition(String s) {
+        // write your code here
+        List<List<String>> res = new ArrayList<>();
+        if (s == null || s.length() == 0) {
+            return res;
+        }
+        
+        List<String> unit = new ArrayList<>();
+        dfs(s, 0, res, unit);
+        return res;
+    }
+    
+    public void dfs(String s, int start, List<List<String>> res, List<String> unit) {
+        if (start == s.length()) {
+            res.add(new ArrayList<>(unit));
+            return;//这个和subset不同在于，subsets的length是在递增 不一定能到最长，所以不能return，return会造成只有一个结果。
+        }
+        
+        for (int i = start; i < s.length(); i++) {
+            String sub = s.substring(start, i + 1);
+            if (isValid(sub)) {
+                unit.add(sub);
+                dfs(s, i + 1, res, unit);
+                unit.remove(unit.size() - 1);
+            }
+        }
+    }
+    
+    public boolean isValid(String s) {
+        for (int i = 0, j = s.length() - 1; i < j; i++, j--) {
+            if (s.charAt(i) != s.charAt(j)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
