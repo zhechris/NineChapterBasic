@@ -1,4 +1,4 @@
-没写出来
+得了吧，这一章基本都没写出来，多来几遍吧，递归还挺重要的
 137. Clone Graph
 /**
  * Definition for undirected graph.
@@ -385,3 +385,45 @@ public class Solution {
         return true;
     }
 }
+
+
+135. Combination Sum
+public class Solution {
+    public  List<List<Integer>> combinationSum(int[] candidates, int target) {
+        List<List<Integer>> result = new ArrayList<>();
+        if (candidates == null) {
+            return result;
+        }
+
+        List<Integer> combination = new ArrayList<>();
+        Arrays.sort(candidates);
+        helper(candidates, 0, target, combination, result);
+
+        return result;
+    }
+
+     void helper(int[] candidates,
+                 int index,
+                 int target,
+                 List<Integer> combination,
+                 List<List<Integer>> result) {
+        if (target < 0) {
+            return;
+        }
+        
+        if (target == 0) {
+            result.add(new ArrayList<Integer>(combination));
+            return;
+        }
+
+        for (int i = index; i < candidates.length; i++) {
+            if (i != 0 && candidates[i] == candidates[i - 1]) {
+                continue;
+            }
+            combination.add(candidates[i]);
+            helper(candidates, i, target - candidates[i], combination, result);
+            combination.remove(combination.size() - 1);
+        }
+    }
+}
+
