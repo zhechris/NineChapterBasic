@@ -427,3 +427,44 @@ public class Solution {
     }
 }
 
+153. Combination Sum II
+public class Solution {
+    /**
+     * @param num: Given the candidate numbers
+     * @param target: Given the target number
+     * @return: All the combinations that sum to target
+     */
+    public List<List<Integer>> combinationSum2(int[] num, int target) {
+        // write your code here
+        List<List<Integer>> res = new ArrayList<>();
+        if (num == null || num.length == 0) {
+            return res;
+        }
+        
+        List<Integer> unit = new ArrayList<>();
+        Arrays.sort(num);
+        dfs(num, target, 0, res, unit);
+        
+        return res;
+    }
+    
+    public void dfs(int[] num, int target, int start, List<List<Integer>> res, List<Integer> unit) {
+        if (target < 0) {
+            return;
+        }
+        
+        if (target == 0) {
+            if (!res.contains(unit)) {
+                res.add(new ArrayList<>(unit));
+                return;
+            }
+        }
+        
+        for (int i = start; i < num.length; i++) {
+            
+            unit.add(num[i]);
+            dfs(num, target - num[i], i + 1, res, unit);
+            unit.remove(unit.size() - 1);
+        }
+    }
+}
