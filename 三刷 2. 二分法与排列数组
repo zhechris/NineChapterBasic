@@ -157,3 +157,39 @@ public class Solution {
         return false;
     }
 }
+
+
+1.可以用二维数组转换成一维数组的办法，但是时间复杂度高。 2.可以用数学的办法，从左下角向右上角扫描，只能这么扫描，需要记住这种方法。
+38. Search a 2D Matrix II
+public class Solution {
+    /**
+     * @param matrix: A list of lists of integers
+     * @param target: An integer you want to search in matrix
+     * @return: An integer indicate the total occurrence of target in the given matrix
+     */
+    public int searchMatrix(int[][] matrix, int target) {
+        // write your code here
+        int count = 0;
+        if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
+            return count;
+        }
+        
+        int n = matrix.length;
+        int m = matrix[0].length;
+        int i = n - 1;
+        int j = 0;
+        
+        while (i >= 0 && j < m) {
+            if (matrix[i][j] == target) {
+                count++;
+                i--;
+                j++;
+            } else if (matrix[i][j] > target) {
+                i--;
+            } else {
+                j++;
+            }
+        }
+        return count;
+    }
+}
