@@ -455,3 +455,116 @@ public class Solution {
         return false;
     }
 }
+
+三刷依旧不会，下次至少o(m + n)的方法要掌握了。
+**********************************
+这道题目很经典，必须要掌握
+65. Median of two Sorted Arrays
+二刷：
+一种笨方法，merge两个数组到一个数组中去，时间复杂度O(M + N),空间复杂度O(M + N)
+如果findkth改成这种，时间复杂度为O(K),空间复杂度为O(1),但是时间复杂度最坏为O(M + N)
+
+    private int findKth(int[] nums1, int[] nums2, int k){
+        int p = 0, q = 0;
+        for(int i = 0; i < k - 1; i++){
+            if(p>=nums1.length && q<nums2.length){
+                q++;
+            } else if(q>=nums2.length && p<nums1.length){
+                p++;
+            } else if(nums1[p]>nums2[q]){
+                q++;
+            } else {
+                p++;
+            }
+        }
+        if(p>=nums1.length) {
+            return nums2[q];
+        } else if(q>=nums2.length) {
+            return nums1[p];
+        } else {
+            return Math.min(nums1[p],nums2[q]);
+        }
+    }
+    
+public class Solution {
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        int len1 = nums1.length;
+        int len2 = nums2.length;
+        int total = len1 + len2;
+        if(total % 2==0){
+            return (findKth(nums1,nums2,total/2)+findKth(nums1,nums2,total/2+1))/2.0;
+        } else {
+            return findKth(nums1,nums2,total/2+1);
+        }
+    }
+    private int findKth(int[] A, int[] B, int index){
+        int m = A.length;
+        int n = B.length;
+        int[] C = new int[m + n];
+        int k = 0;
+        int i=0,j=0;//定义下标，其中i是向量1的下标，j是向量2的下标
+        while(i<m&&j<n)
+        {
+            if(A[i]<=B[j])
+                C[k++]=A[i++];
+            else
+                C[k++]=B[j++];
+        }
+        //数组B还有剩余部分，将数组B剩余部分依次插入
+        if(i==m)
+        {
+            while(j<n)
+                C[k++]=B[j++];
+        }
+        else if(j==n)//数组A还有剩余部分，将数组A剩余部分依次插入
+        {
+            while(i<m)
+                C[k++]=A[i++];
+        }
+        return C[index - 1];
+    }
+}
+
+二分法，时间复杂度O(log(m+n))
+假设A和B的元素个数都大于k/2，我们将A的第k/2个元素（即A[k/2-1]）和B的第k/2个元素（即B[k/2-1]）进行比较
+A[k/2-1] > B[k/2-1]
+A[k/2-1] < B[k/2-1]
+如果A[k/2-1] < B[k/2-1]，意味着A[0]到A[k/2-1]不可能到二分的位置，直接删除即可。
+因此，我们可以写一个递归函数。那么函数什么时候应该终止呢？
+当A或B是空时，直接返回B[k-1]或A[k-1]；
+当k=1是，返回min(A[0], B[0])；
+public class Solution {
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        int len = nums1.length + nums2.length; 
+        if (len % 2 == 1) { 
+            return findKth(nums1, 0, nums2, 0, len / 2 + 1); 
+        } else { 
+            return (findKth(nums1, 0, nums2, 0, len / 2) + findKth(nums1, 0, nums2, 0, len / 2 + 1)) / 2.0; 
+        } 
+    } 
+     
+    public int findKth(int[] A, int startA, int[] B, int startB, int k) { 
+        if (startA >= A.length) { //A 中元素不够了
+            return B[startB + k - 1]; 
+        } 
+         
+        if (startB >= B.length) { 
+            return A[startA + k - 1]; 
+        } 
+         
+        if (k == 1) { 
+            return Math.min(A[startA], B[startB]); 
+        } 
+         
+        int indexA = startA + k / 2 - 1; 
+        int indexB = startB + k / 2 - 1; 
+        int keyA = indexA < A.length ? A[indexA] : Integer.MAX_VALUE; //If the array has no more than k /2 elements, we set key = MAX_VALUE.
+        int keyB = indexB < B.length ? B[indexB] : Integer.MAX_VALUE; //if A is not enough, we can only find it from B
+         
+        if (keyA < keyB) { 
+            return findKth(A, startA + k / 2, B, startB, k - k / 2); 
+        } else { 
+            return findKth(A, startA, B, startB + k / 2, k - k / 2); 
+        } 
+    } 
+}
