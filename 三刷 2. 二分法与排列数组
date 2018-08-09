@@ -632,3 +632,29 @@ public class Solution {
         }
     }
 }
+
+53. Reverse Words in a String
+public class Solution {
+    /*
+     * @param s: A string
+     * @return: A string
+     */
+    public String reverseWords(String s) {
+        // write your code here
+        if (s == null || s.length() == 0) {
+            return "";
+        }
+        
+        String[] strs = s.split(" ");
+        StringBuilder sb = new StringBuilder();
+        
+        for (int i = strs.length - 1; i >= 0; i--) {
+            if(!strs[i].equals("")) {//in case multiple space
+                sb.append(strs[i]);
+                sb.append(" ");
+            }
+        }
+        
+        return sb.toString();
+    }
+}
