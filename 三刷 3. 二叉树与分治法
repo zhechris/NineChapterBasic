@@ -24,12 +24,12 @@ public class Solution {
         return res;
     }
     private void dfs(TreeNode root, List<Integer> res) {
-        if (root == null) {
-            return;
+        if (root ！= null) {
+            res.add(root.val);
+            dfs(root.left, res);
+            dfs(root.right, res);
         }
-        res.add(root.val);
-        dfs(root.left, res);
-        dfs(root.right, res);
+        
     }
 }
 
@@ -75,3 +75,60 @@ public class Solution {
     }
 }
 
+67. Binary Tree Inorder Traversal
+//递归算法
+/**
+ * Definition of TreeNode:
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left, right;
+ *     public TreeNode(int val) {
+ *         this.val = val;
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+
+
+public class Solution {
+    /*
+     * @param root: A Tree
+     * @return: Inorder in ArrayList which contains node values.
+     */
+    public List<Integer> inorderTraversal(TreeNode root) {
+        // write your code here
+        List<Integer> result = new ArrayList<Integer>();
+        traverse(root, result);
+        return result;
+    }
+    
+    private void traverse(TreeNode root, List<Integer> result){
+        if(root = null){
+            traverse(root.left, result);
+            result.add(root.val);
+            traverse(root.right, result);
+        }
+    }
+}
+//非递归算法
+public class Solution {
+    /**
+     * @param root: The root of binary tree.
+     * @return: Inorder in ArrayList which contains node values.
+     */
+    public List<Integer> inorderTraversal(TreeNode root) {
+        Stack<TreeNode> stack = new Stack<TreeNode>();
+        List<Integer> result = new ArrayList<Integer>();
+        TreeNode curt = root;
+        while (curt != null || !stack.empty()) {
+            while (curt != null) {
+                stack.add(curt);
+                curt = curt.left;//先走到左边底部
+            }
+            curt = stack.pop();
+            result.add(curt.val);
+            curt = curt.right;//右边的压入
+        }
+        return result;
+    }
+}
