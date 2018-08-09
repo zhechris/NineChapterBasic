@@ -464,3 +464,46 @@ public class Solution {
 
     }
 }
+
+95. Validate Binary Search Tree
+/**
+ * Definition of TreeNode:
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left, right;
+ *     public TreeNode(int val) {
+ *         this.val = val;
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+
+public class Solution {
+    /**
+     * @param root: The root of binary tree.
+     * @return: True if the binary tree is BST, or false
+     */
+     
+    private List<Integer> list = new ArrayList<>();
+    public boolean isValidBST(TreeNode root) {
+        // write your code here
+        
+        dfs(root);
+        for (int i = 1; i < list.size(); i++) {
+            if (list.get(i) <= list.get(i - 1)) {
+                return false;
+            }
+        }
+        return true;
+        
+    }
+    public void dfs(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        
+        dfs(root.left);
+        list.add(root.val);
+        dfs(root.right);
+    }
+}
