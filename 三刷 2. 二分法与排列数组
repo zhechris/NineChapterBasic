@@ -408,3 +408,50 @@ public class Solution {
         return -1;
     }
 }
+
+63. Search in Rotated Sorted Array II
+public class Solution {
+    /**
+     * @param A: an integer ratated sorted array and duplicates are allowed
+     * @param target: An integer
+     * @return: a boolean 
+     */
+    public boolean search(int[] A, int target) {
+        // write your code here
+        if (A == null || A.length == 0) {
+            return false;
+        }
+        
+        int start = 0;
+        int end = A.length - 1;
+        
+        while (start + 1 < end) {
+            int mid = start + (end - start) / 2;
+            if (A[mid] == A[end]) {
+                end--;
+            } else if (A[mid] < A[end]) {//后半部分排序好的
+                if (A[mid] <= target && target <= A[end]) {
+                    start = mid;
+                } else {
+                    end = mid;
+                }
+            } else {//前半部分排序好的
+                if (A[start] <= target && target <= A[mid]) {
+                    end = mid;
+                } else {
+                    start = mid;
+                }
+            }
+        }
+        
+        if (A[start] == target) {
+            return true;
+        }
+        
+        if (A[end] == target) {
+            return true;
+        }
+        
+        return false;
+    }
+}
