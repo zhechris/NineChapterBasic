@@ -239,3 +239,107 @@ public class Solution {
         return Math.max(getHeight(root.left), getHeight(root.right)) + 1;
     }
 }
+
+没写出来，so sad, 需要抽时间反复来几遍
+94. Binary Tree Maximum Path Sum
+
+/**
+ * Definition of TreeNode:
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left, right;
+ *     public TreeNode(int val) {
+ *         this.val = val;
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+
+public class Solution {
+    /**
+     * @param root: The root of binary tree.
+     * @return: An integer
+     */
+    class result {
+        int singlepath; //include the root from top to bottom SecurityManager
+        int maxPath;// global maxPath
+        result(int singlepath, int maxPath) {
+            this.singlepath = singlepath;
+            this.maxPath = maxPath;
+        }
+    }
+    
+    public int maxPathSum(TreeNode root) {
+        // write your code here
+        result result = dfs(root);
+        return result.maxPath;
+    }
+    
+    private result dfs(TreeNode root) {
+        if (root == null) {
+            return new result(Integer.MIN_VALUE, Integer.MIN_VALUE);
+        }
+        
+        result left = dfs(root.left);
+        result right = dfs(root.right);
+        //include root val's max sum from top to bottom
+        int singlepath = Math.max(0, Math.max(left.singlepath, right.singlepath)) + root.val;
+        //left or right son tree max, not include root val, could be left to right or top to bottom
+        int maxPath = Math.max(left.maxPath, right.maxPath);
+        //from left to right, include root val
+        maxPath = Math.max(maxPath, Math.max(left.singlepath, 0) + Math.max(right.singlepath, 0) + root.val);
+        return new result(singlepath, maxPath);
+        
+    }
+}
+
+69. Binary Tree Level Order Traversal
+/**
+ * Definition of TreeNode:
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left, right;
+ *     public TreeNode(int val) {
+ *         this.val = val;
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+
+public class Solution {
+    /**
+     * @param root: A Tree
+     * @return: Level order a list of lists of integer
+     */
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        // write your code here
+        List<List<Integer>> res = new ArrayList<>();
+        if (root == null) {
+            return res;
+        }
+        
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            List<Integer> unit = new ArrayList<>();
+            while (size > 0) {
+                TreeNode temp = queue.poll();
+                unit.add(temp.val);
+                
+                if (temp.left != null) {
+                    queue.offer(temp.left);
+                }
+                if (temp.right != null) {
+                    queue.offer(temp.right);
+                }
+                
+                size--;
+            }
+            res.add(unit);
+        }
+        
+        return res;
+    }
+}
