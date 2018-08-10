@@ -662,3 +662,105 @@ public class Solution {
         return root;
     }
 }
+
+
+这道题要多写几遍，挺重要，删除，查找二叉树的操作
+87. Remove Node in Binary Search Tree
+
+/**
+ * Definition of TreeNode:
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left, right;
+ *     public TreeNode(int val) {
+ *         this.val = val;
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+/*首先在bst中搜索node值为value的点及其父节点。
+下一步将该点从bst中删除。
+1) 若要删除节点的右子树为空，则直接将要删除节点的左子树与其父节点连接。
+2) 若要删除节点的右子树不为空，则要找到右子树的最小值（右子树的最左边节点）
+使其成为以要删去节点为根节点的子树的新的根节点。
+3) 首先将右子树最小值节点的右子树与右子树最小值节点的父节点连接
+（即从右子树中删去最小值节点，最小值节点在之前被保存），
+然后将要删去节点的父节点与最小值节点连接，
+最后将要删去节点的左右子树分别与最小值节点连接。*/
+
+public class Solution {
+    /*
+     * @param root: The root of the binary search tree.
+     * @param value: Remove the node with given value.
+     * @return: The root of the binary search tree after removal.
+     */
+    public TreeNode removeNode(TreeNode root, int value) {
+        // write your code here
+        TreeNode dummy = new TreeNode(0);
+        dummy.left = root;
+
+        TreeNode parent = findNode(dummy, root, value);
+        TreeNode node;
+        if(parent.left != null && parent.left.val == value){
+            node = parent.left;
+        }else if(parent.right != null && parent.right.val == value){
+            node = parent.right;
+        }else{
+            //没找到
+            return dummy.left;
+        }
+
+        deleteNode(parent, node);
+        return dummy.left;
+    }
+    //find parent node
+    private TreeNode findNode(TreeNode parent, TreeNode node, int value){
+        if(node == null){
+            return parent;
+        }
+
+        if(node.val == value){
+            return parent;
+        }
+
+        if(value < node.val){
+            return findNode(node, node.left, value);
+        }else{
+            return findNode(node, node.right, value);
+        }
+    }
+
+    private void deleteNode(TreeNode parent, TreeNode node) {
+        //delete node does not have right child
+        if (node.right == null) {
+            if (parent.left == node) {
+                parent.left = node.left;
+            } else {
+                parent.right = node.right;
+            }
+        } else {
+            TreeNode temp = node.right;
+            TreeNode father = node;
+            //寻找最小的节点
+            while(temp.left != null){
+                father = temp;
+                temp = temp.left;
+            }
+            //断开最小节点和他的父节点的连接
+            if(father.left == temp){
+                father.left = temp.right;
+            }else{
+                father.right = temp.right;
+            }
+            //最小的节点和删除节点的父节点连接起来
+            if(parent.left == node){
+                parent.left = temp;
+            }else{
+                parent.right = temp;
+            }
+            //将要删除节点的孩子接到挪上来的节点下面
+            temp.left = node.left;
+            temp.right = node.right;
+        }
+    }
+}
