@@ -182,3 +182,33 @@ public class Solution {
         return dp[n];
     }
 }
+
+
+116. Jump Game
+public class Solution {
+    /**
+     * @param A: A list of integers
+     * @return: A boolean
+     */
+    public boolean canJump(int[] A) {
+        // write your code here
+        if (A == null || A.length == 0) {
+            return false;
+        }
+        
+        int n = A.length;
+        boolean[] dp = new boolean[n];
+        
+        dp[0] = true;
+        for (int i = 1; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                if (dp[j] == true && A[j] >= (i - j)) {
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+        
+        return dp[n - 1];
+    }
+}
