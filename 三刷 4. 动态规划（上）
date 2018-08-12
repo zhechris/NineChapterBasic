@@ -212,3 +212,34 @@ public class Solution {
         return dp[n - 1];
     }
 }
+
+117. Jump Game II
+public class Solution {
+    /**
+     * @param A: A list of integers
+     * @return: An integer
+     */
+    public int jump(int[] A) {
+        // write your code here
+        // write your code here
+        int[] steps = new int[A.length];
+
+        // initialize
+        steps[0] = 0;
+        for (int i = 1; i < A.length; i++) {
+            steps[i] = Integer.MAX_VALUE;//小技巧初始化最大
+        }
+
+        // function
+        for (int i = 1; i < A.length; i++) {
+            for (int j = 0; j < i; j++) {
+                if (j + A[j] >= i) {
+                    steps[i] = Math.min(steps[i], steps[j] + 1);
+                }
+            }
+        }
+        
+        // answer
+        return steps[A.length - 1];
+    }
+}
