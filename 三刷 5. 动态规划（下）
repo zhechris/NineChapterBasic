@@ -76,3 +76,92 @@ public class Solution {
         return getPalindrome;
     }
 }
+
+107. Word Break
+if you choose forward thought, TLE
+public class Solution {
+    /*
+     * @param s: A string
+     * @param dict: A dictionary of words dict
+     * @return: A boolean
+     */
+    public boolean wordBreak(String s, Set<String> dict) {
+        // write your code here
+        //edge case 
+        if (s == null && !dict.isEmpty()) {
+            return false;
+        }
+        
+        if (s.length() == 0 && dict.isEmpty()) {
+            return true;
+        }
+        
+        //int maxLength = getMaxLength(dict);
+        int n = s.length();
+        //state, first i char can be perfect cut 
+        boolean[] dp = new boolean[n + 1];
+        
+        //initilize 
+        dp[0] = true;
+        
+        //function 
+        for (int i = 1; i <= n; i++) {
+            for (int j = 0; j < i; j++) {
+                String str = s.substring(j, i);
+                if (dp[j] && dict.contains(str)) {
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+        return dp[n];
+    }
+}
+
+//we need choose backward thought
+public class Solution {
+    /*
+     * @param s: A string
+     * @param dict: A dictionary of words dict
+     * @return: A boolean
+     */
+    public boolean wordBreak(String s, Set<String> dict) {
+        // write your code here
+        //edge case 
+        if (s == null && !dict.isEmpty()) {
+            return false;
+        }
+        
+        if (s.length() == 0 && dict.isEmpty()) {
+            return true;
+        }
+        
+         int maxLength = getMaxLength(dict);
+        int n = s.length();
+        //state, first i char can be perfect cut 
+        boolean[] dp = new boolean[n + 1];
+        
+        //initilize 
+        dp[0] = true;
+        
+        //function 
+        for (int i = 1; i <= n; i++) {
+            for (int j = 0; j <= i && j <= maxLength; j++) {// loop must be terminated, if continue with doing nothing, still consume time
+                String str = s.substring(i - j,i);
+                if (dp[i - j] && dict.contains(str)) {
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+        return dp[n];
+    }
+    
+    private int getMaxLength(Set<String> dict){
+        int max = 0;
+        for(String s : dict){
+            max = Math.max(max,s.length());
+        }
+        return max;
+    }
+}
