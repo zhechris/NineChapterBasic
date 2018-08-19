@@ -1,0 +1,60 @@
+
+
+108. Palindrome Partitioning II
+public class Solution {
+    /**
+     * @param s: A string
+     * @return: An integer
+     */
+    public int minCut(String s) {
+        // write your code here
+        if (s == null || s.length() == 0) {
+            return 0;
+        }
+        
+        int n = s.length();
+        int[] dp = new int[n + 1];// first i string need how many cuts can be palindrome
+        
+        
+        boolean[][] getPalindrome = isPalindrome(s);
+        //initilize 
+        for (int i = 0; i <= n; i++) {// Notice dp[0] should be -1, not 0.
+            dp[i] = i - 1;
+        }
+        
+        //function 
+        for (int i = 1; i <= n; i++) {
+            for (int j = 0; j < i; j++) {
+                if (getPalindrome[j][i - 1]) {
+                    dp[i] = Math.min(dp[i], dp[j] + 1);
+                }
+            }
+        }
+        
+        return dp[n];
+    }
+    
+    
+    private boolean[][] isPalindrome(String s) {
+        
+        int n = s.length();
+        boolean[][] getPalindrome = new boolean[n][n];
+        
+        for (int i = 0; i < n; i++) {
+            getPalindrome[i][i] = true;
+        }
+        
+        for (int i = 0; i < s.length() - 1; i++) {
+            getPalindrome[i][i + 1] = (s.charAt(i) == s.charAt(i + 1)); // in case only two char in the string
+        }
+        
+        for (int i = 2; i < n; i++) {//区间型动态规划，背下来。外层长度，内层起点
+            for (int start = 0; start + i < n; start++) {
+                getPalindrome[start][start + i]
+                    = getPalindrome[start + 1][start + i - 1] && s.charAt(start) == s.charAt(start + i);
+            }
+        }
+        
+        return getPalindrome;
+    }
+}
