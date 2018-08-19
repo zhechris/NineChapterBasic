@@ -1,5 +1,23 @@
+不要求求具体的步骤，只需要结果，可以考虑dp
+坐标类的只需要开n个空间
+前i个这种需要开n + 1个空间
+******************************************
+1.矩阵dp（坐标）
+二维
+一维
+2.分割dp
+*如果限制了切割子字符串的个数，需要二维
+dp[i][j] 前i个字符，切成j个单词，是否可行
+*如果没有限制
+dp[i]
+3.区间dp
+i - j 二维
+4.两个序列的dp
+二维
 
-
+多写几遍这道题目
+特别是预处理的那一段，可以背下来
+这道题是切割dp
 108. Palindrome Partitioning II
 public class Solution {
     /**
@@ -34,7 +52,7 @@ public class Solution {
         return dp[n];
     }
     
-    
+    //Pre-process need to be recite
     private boolean[][] isPalindrome(String s) {
         
         int n = s.length();
