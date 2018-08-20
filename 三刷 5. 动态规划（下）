@@ -1,6 +1,7 @@
 不要求求具体的步骤，只需要结果，可以考虑dp
 坐标类的只需要开n个空间
 前i个这种需要开n + 1个空间
+全部需要再看看
 ******************************************
 1.矩阵dp（坐标）
 二维
@@ -241,5 +242,48 @@ public class Solution {
             }
         }
         return res;
+    }
+}
+
+119. Edit Distance
+public class Solution {
+    /**
+     * @param word1: A string
+     * @param word2: A string
+     * @return: The minimum number of steps.
+     */
+    public int minDistance(String word1, String word2) {
+        // write your code here
+        if (word1 == null || word2 == null) {
+            return 0;
+        }
+        
+        int m = word1.length();
+        int n = word2.length();
+        
+        //state 
+        int[][] dp = new int[m + 1][n + 1];
+        
+        //initilize 
+        for (int i = 0; i < n + 1; i++) {
+            dp[0][i] = i;
+        }
+        
+        for (int i = 0; i < m + 1; i++) {
+            dp[i][0] = i;
+        }
+        
+        //function 
+        for (int i = 1; i <= m; i++) {
+            for(int j = 1; j <= n; j++) {
+                if (word1.charAt(i - 1) == word2.charAt(j - 1)) {
+                    dp[i][j] = dp[i - 1][j - 1];
+                } else {
+                    dp[i][j] = 1 + Math.min(dp[i - 1][j - 1], Math.min(dp[i - 1][j], dp[i][j - 1]));
+                }
+            }
+        }
+        
+        return dp[m][n];
     }
 }
