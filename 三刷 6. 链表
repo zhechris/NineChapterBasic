@@ -389,3 +389,58 @@ public class Solution {
     }
 }
 
+106. Convert Sorted List to Binary Search Tree
+/**
+ * Definition for ListNode.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int val) {
+ *         this.val = val;
+ *         this.next = null;
+ *     }
+ * }
+ * Definition of TreeNode:
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left, right;
+ *     public TreeNode(int val) {
+ *         this.val = val;
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+
+
+public class Solution {
+    /*
+     * @param head: The first node of linked list.
+     * @return: a tree node
+     */
+    public TreeNode sortedListToBST(ListNode head) {
+        // write your code here
+        return buildTree(head, null);
+    }
+    public TreeNode buildTree(ListNode start, ListNode end) {
+        if (start == end) {
+            return null;
+        }
+        ListNode mid = findMiddle(start, end);
+        TreeNode root = new TreeNode(mid.val);
+        root.left = buildTree(start, mid);
+        root.right = buildTree(mid.next, end);
+        return root;
+    }
+    //find different part mid
+    public ListNode findMiddle(ListNode start, ListNode end) {
+        ListNode slow = start;
+        ListNode fast = start;
+        
+        while (fast != end && fast.next != end) {
+            slow = slow.next;
+            fast =fast.next.next;
+        }
+        return slow;
+    }
+}
+
