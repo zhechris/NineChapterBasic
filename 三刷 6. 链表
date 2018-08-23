@@ -163,7 +163,7 @@ public class Solution {
 public class Solution {            
     private ListNode findMiddle(ListNode head) {
         ListNode slow = head, fast = head.next;
-        while (fast != null && fast.next != null) {//fast不能去掉，因为fast可能为null，背下来这种方式，以后不要让fast和slow从同一点开始了。
+        while (fast != null && fast.next != null) {//fast不能去掉，因为fast可能为null，背下来这种方式,fast最好从slow下一个开始，避免只有两个node时候报错
             fast = fast.next.next;
             slow = slow.next;
         }
@@ -434,7 +434,7 @@ public class Solution {
     //find different part mid
     public ListNode findMiddle(ListNode start, ListNode end) {
         ListNode slow = start;
-        ListNode fast = start;
+        ListNode fast = start.next;
         
         while (fast != end && fast.next != end) {
             slow = slow.next;
@@ -465,22 +465,64 @@ public class Solution {
      */
     public boolean hasCycle(ListNode head) {
         // write your code here
-        if (head == null || head.next == null) {
+        if (head == null) {
             return false;
         }
         
         ListNode slow = head;
-        ListNode fast = head.next;
+        ListNode fast = head;
         
         while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
             if (fast == slow) {
                 return true;
             }
-            
-            fast = fast.next.next;
+        }
+        return false;
+    }
+}
+
+//只需要再推导一下为什么相遇以后slow挪到head
+103. Linked List Cycle II
+/**
+ * Definition for ListNode.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int val) {
+ *         this.val = val;
+ *         this.next = null;
+ *     }
+ * }
+ */
+
+
+public class Solution {
+    /*
+     * @param head: The first node of linked list.
+     * @return: The node where the cycle begins. if there is no cycle, return null
+     */
+    public ListNode detectCycle(ListNode head) {
+        // write your code here
+        if(head == null || head.next == null){
+            return null;
+        }
+        ListNode slow = head;
+        ListNode fast = head;
+        while(fast != null && fast.next != null){
             slow = slow.next;
+            fast = fast.next.next;
+            if(fast == slow){
+                slow = head;
+                while (fast != slow) {
+                    fast = fast.next;
+                    slow = slow.next;
+                }
+                return slow;
+            }
         }
         
-        return false;
+        return null;
     }
 }
