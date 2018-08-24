@@ -166,3 +166,43 @@ public class Solution {
         return res;
     }
 }
+
+65. Median of two Sorted Arrays
+public class Solution {
+    /*
+     * @param A: An integer array
+     * @param B: An integer array
+     * @return: a double whose format is *.5 or *.0
+     */
+    public double findMedianSortedArrays(int[] A, int[] B) {
+        // write your code here
+        if (A == null || B == null) {
+            return 0.0;
+        }
+        
+        int index = 0;
+        int m = A.length;
+        int n = B.length;
+        double [] res = new double[m + n];
+        int i = 0, j = 0;
+        while(i < m && j < n){
+            if(A[i] < B[j]){
+                res[index++] = A[i++];
+            } else{
+                res[index++] = B[j++];
+            }
+        }
+        while(i < m){
+            res[index++] = A[i++];
+        }
+        while(j < n){
+            res[index++] =B[j++];
+        }
+        
+        if((m+n) % 2 == 0){
+            return (res[(m + n) / 2] + res[(m + n) / 2 - 1]) / 2;
+        } else{
+            return res[(m + n) / 2];
+        }
+    }
+}
