@@ -219,10 +219,10 @@ public class Solution {
             return 0;
         }
         int res = Integer.MIN_VALUE;
-        int min = Integer.MAX_VALUE;
+        int min = prices[0];
         for (int i = 0; i < prices.length; i++) {
-            min = Math.min(min, prices[i]);
             res = Math.max(res, prices[i] - min);
+            min = Math.min(min, prices[i]);
         }
         
         return res;
@@ -323,5 +323,47 @@ public class Solution {
         }
         
         return sum;
+    }
+}
+
+42. Maximum Subarray II
+public class Solution {
+    /*
+     * @param nums: A list of integers
+     * @return: An integer denotes the sum of max two non-overlapping subarrays
+     */
+    public int maxTwoSubArrays(List<Integer> nums) {
+        // write your code here
+        int size = nums.size();
+        
+        int[] left = new int[size];
+        int[] right = new int[size];
+        
+        int max = Integer.MIN_VALUE;
+        int sum = 0;
+        int min = 0;
+        for (int i = 0; i < size; i++) {
+            sum += nums.get(i);
+            max = Math.max(max, sum - min);//因为有负数，所以先计算结果再更新min。前面的股票问题也这样考虑。防止以后记混。
+            min = Math.min(min, sum);
+            left[i] = max;
+        }
+        
+        max = Integer.MIN_VALUE;
+        sum = 0;
+        min = 0;
+        //反正是连续的数组，所以不存在先后顺序，可以从后面加，这样更简单。
+        for (int i = size - 1; i >= 0; i--) {
+            sum += nums.get(i);
+            max = Math.max(max, sum - min);
+            min = Math.min(min, sum);;
+            right[i] = max;
+        }
+        
+        max = Integer.MIN_VALUE;
+        for(int i = 0; i < size - 1; i++){
+            max = Math.max(max, left[i] + right[i + 1]);
+        }
+        return max;
     }
 }
