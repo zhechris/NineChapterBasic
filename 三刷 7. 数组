@@ -294,3 +294,34 @@ public class Solution {
         return profit;
     }
 }
+
+41. Maximum Subarray
+public class Solution {
+    /**
+     * @param nums: A list of integers
+     * @return: A integer indicate the sum of max subarray
+     */
+    public int maxSubArray(int[] nums) {
+        // write your code here
+        int sum = Integer.MIN_VALUE;
+        if (nums == null || nums.length == 0) {
+            return sum;
+        }
+        
+        //presum
+        int[] preSum = new int[nums.length + 1];
+        preSum[0] = 0;
+        for (int i = 1; i < preSum.length; i++) {
+            preSum[i] = preSum[i - 1] + nums[i - 1];
+        }
+        
+        int min = preSum[0];
+        for (int i = 1; i < preSum.length; i++) {
+            sum = Math.max(sum, preSum[i] - min);//sum要在min之前，和股票不一样，因为这里有负数
+            min = Math.min(min, preSum[i]);
+            
+        }
+        
+        return sum;
+    }
+}
