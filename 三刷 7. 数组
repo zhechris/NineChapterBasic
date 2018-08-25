@@ -622,3 +622,91 @@ public class Solution {
         return res;
     }
 }
+
+59. 3Sum Closest
+public class Solution {
+    /**
+     * @param numbers: Give an array numbers of n integer
+     * @param target: An integer
+     * @return: return the sum of the three integers, the sum closest target.
+     */
+    public int threeSumClosest(int[] numbers, int target) {
+        // write your code here
+        int res = 0;
+        if (numbers.length < 3 || numbers == null) {
+            return res;
+        }
+        
+        Arrays.sort(numbers);
+        int diff = Integer.MAX_VALUE;
+        for (int i = 0; i < numbers.length; i++) {
+            int left = i + 1;
+            int right = numbers.length - 1;
+            while (left < right) {
+                int sum = numbers[i] + numbers[left] + numbers[right];
+                if (Math.abs(sum - target) < diff) {
+                    diff = Math.abs(sum - target);
+                    res = sum;
+                }
+                if (sum == target) {
+                    return target;
+                } else if (sum < target) {
+                    left++;
+                } else {
+                    right--;
+                }
+            }
+        }
+        
+        return res;
+    }
+}
+//和3sum一样，别的不多说，只说一点，用hashset控制重复，原因是
+list的contains是遍历一遍得出结果，hashset是直接找，效率差很多。
+58. 4Sum
+public class Solution {
+    /**
+     * @param numbers: Give an array
+     * @param target: An integer
+     * @return: Find all unique quadruplets in the array which gives the sum of zero
+     */
+    public List<List<Integer>> fourSum(int[] numbers, int target) {
+        // write your code here
+        List<List<Integer>> res = new ArrayList<>();
+        if (numbers.length < 4 || numbers == null) {
+            return res;
+        }
+        
+        Arrays.sort(numbers);
+        
+        //Set<List<Integer>> set = new HashSet<>();
+        
+        for (int i = 0; i < numbers.length - 3; i++) {
+            for (int j = i + 1; j < numbers.length - 2; j++) {
+                int left = j + 1;
+                int right = numbers.length - 1;
+                while (left < right) {
+                    int sum = numbers[i] + numbers[j] + numbers[left] + numbers[right];
+                    if (sum == target) {
+                        List<Integer> list = new ArrayList<>();
+                        list.add(numbers[i]);
+                        list.add(numbers[j]);
+                        list.add(numbers[left]);
+                        list.add(numbers[right]);
+                        if (!res.contains(list)) {
+                            //set.add(list);
+                            res.add(list);
+                        }
+                        left++;
+                        right--;
+                    } else if (sum > target) {
+                        right--;
+                    } else {
+                        left++;
+                    }
+                }
+            }
+        }
+        return res;
+    }
+}
