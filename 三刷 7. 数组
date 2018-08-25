@@ -494,3 +494,62 @@ public class Solution {
         return res;
     }
 }
+
+没写出来，so sad
+
+139. Subarray Sum Closest
+//这道题延续Subarray Sum的思路，即将[0, i]的sum存起来。这里构造了一个新的类，Pair。
+//一方面存sum值，一方面存index。然后根据sum值排序，算相邻sum值的差值。差值最小的即为结果。时间复杂度是O(nlogn)，空间复杂度是O(n)。
+public class Solution {
+    
+    class Pair {
+        public int sum;
+        public int index;
+        public Pair(int sum, int index) {
+            this.sum = sum;
+            this.index = index;
+        }
+    }
+    /**
+     * @param nums: A list of integers
+     * @return: A list of integers includes the index of the first number 
+     *          and the index of the last number
+     */
+    public int[] subarraySumClosest(int[] nums) {
+        // write your code here
+        int[] result = new int[2];
+        if (nums == null || nums.length == 0) {
+            return result;
+        }
+        int len = nums.length;
+        int sum = 0;
+        List<Pair> list = new ArrayList<Pair>();
+        for (int i = 0; i < len; i++) {
+            sum += nums[i];
+            Pair tmp = new Pair(sum, i);
+            list.add(tmp);
+        }
+        Collections.sort(list, new Comparator<Pair>() {
+            public int compare(Pair a, Pair b) {
+                return (a.sum - b.sum);
+            }
+        });
+        int min = Integer.MAX_VALUE;
+        for (int i = 1; i < len; i++) {
+            int diff = list.get(i).sum - list.get(i - 1).sum;
+            if (diff < min) {
+                min = diff;
+                int index1 = list.get(i).index;
+                int index2 = list.get(i - 1).index; //prefixsum是一段值，是从前面的i+1开始的，所以前一个index要加1
+                if (index1 < index2) {
+                    result[0] = index1 + 1;
+                    result[1] = index2;
+                } else {
+                    result[0] = index2 + 1;
+                    result[1] = index1;
+                }
+            }
+        }
+        return result;
+    }
+}
