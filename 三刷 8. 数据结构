@@ -43,3 +43,49 @@ public class MinStack {
         return minStack.peek();
     }
 }
+
+漏了一个条件，就是if (stack1.isEmpty())， 可以减少不必要的倒腾
+40. Implement Queue by Two Stacks
+public class MyQueue {
+    Stack<Integer> stack1 = new Stack<>();
+    Stack<Integer> stack2 = new Stack<>();
+    public MyQueue() {
+        // do intialization if necessary
+    }
+
+    /*
+     * @param element: An integer
+     * @return: nothing
+     */
+    public void push(int element) {
+        // write your code here
+        stack2.push(element);
+    }
+
+    /*
+     * @return: An integer
+     */
+    public int pop() {
+        // write your code here
+        if (stack1.isEmpty()) {
+            while (!stack2.isEmpty()) {
+                stack1.push(stack2.pop());
+            }
+        }
+        return stack1.pop();
+        
+    }
+
+    /*
+     * @return: An integer
+     */
+    public int top() {
+        // write your code here
+        if (stack1.isEmpty()) {
+            while (!stack2.isEmpty()) {
+                stack1.push(stack2.pop());
+            }
+        }
+        return stack1.peek();
+    }
+}
