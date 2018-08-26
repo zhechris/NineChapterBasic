@@ -1,0 +1,45 @@
+没写出来，so sad
+12. Min Stack
+public class MinStack {
+    Stack<Integer> stack = new Stack<>();
+    Stack<Integer> minStack = new Stack<>();
+    public MinStack() {
+        // do intialization if necessary
+    }
+
+    /*
+     * @param number: An integer
+     * @return: nothing
+     */
+    public void push(int number) {
+        // write your code here
+        stack.push(number);
+        if (minStack.isEmpty()) {
+            minStack.push(number);
+        } else {
+            if (minStack.peek() >= number) {
+                minStack.push(number);
+            }
+        }
+    }
+
+    /*
+     * @return: An integer
+     */
+    public int pop() {
+        // write your code here
+        if (minStack.peek().equals(stack.peek())) {
+            minStack.pop();
+        }
+        
+        return stack.pop();
+    }
+
+    /*
+     * @return: An integer
+     */
+    public int min() {
+        // write your code here
+        return minStack.peek();
+    }
+}
