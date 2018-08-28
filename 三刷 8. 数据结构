@@ -571,3 +571,96 @@ public class Solution {
         return result;
     }
 }
+
+130. Heapify
+/*思路是从底部开始构建数组，将较小的结点移向上层结点。先取数组末尾的两个元素为left和right，
+若2*i+1和2*i+2越界，则赋Integer.MAX_VALUE，这样可以在后面的分支语句避免对越界情况不必要的讨论。
+然后，取left和right的较小者和上层A[i]结点交换，实现min-heap结构。交换了A[i]和A[2*i+1]/A[2*i+2]之后，
+还要重新heapify被交换到末位的原先的A[i]，即交换之后的A[2*i+1]/A[2*i+2]。然后i不断减小，直到整个数组完成heapify。*/
+public class Solution {
+    public void heapify(int[] A) {
+        for (int i = A.length/2; i >= 0; i--) {//前一半已经可以到达数组的末尾了
+            helper(A, i);
+        }
+    }
+    public void helper(int[] A, int i) {
+        if (i > A.length) return;
+        int left = 2 * i + 1 < A.length ? A[2 * i + 1] : Integer.MAX_VALUE;
+        int right = 2 * i + 2 < A.length ? A[2 * i + 2] : Integer.MAX_VALUE;
+        if (left < right && left < A[i]) {//左节点更小，把左节点和当前点交换
+            A[2 * i + 1] = A[i];
+            A[i] = left;
+            helper(A, 2 * i + 1);//交换过以后再把后面的节点重新heapify，因为有可能不成立了。
+        }
+        else if (left >= right && right < A[i]) {
+            A[2 * i + 2] = A[i];
+            A[i] = right;
+            helper(A, 2 * i + 2);
+        }
+        return;
+    }
+}
+
+
+104. Merge K Sorted Lists
+/**
+ * Definition for ListNode.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int val) {
+ *         this.val = val;
+ *         this.next = null;
+ *     }
+ * }
+ */ 
+public class Solution {
+    /**
+     * @param lists: a list of ListNode
+     * @return: The head of one sorted list.
+     */
+    public ListNode mergeKLists(List<ListNode> lists) {  
+        // write your code here
+        if (lists == null || lists.size() == 0) {
+            return null;
+        }
+        
+        return mergeKListsHelper(lists, 0, lists.size() - 1);
+    }
+    
+    public ListNode mergeKListsHelper(List<ListNode> lists, int start, int end) {
+        if (start == end) {
+            return lists.get(start);
+        }
+        
+        int mid = start + (end - start) / 2;
+        
+        ListNode left = mergeKListsHelper(lists, start, mid);
+        ListNode right = mergeKListsHelper(lists, mid + 1, end);
+        
+        return mergeTwoLists(left, right);
+    }
+    
+    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
+        ListNode dummy = new ListNode(0);
+        ListNode head = dummy;
+        while (list1 != null && list2 != null) {
+            if (list1.val < list2.val) {
+                head.next = list1;
+                list1 = list1.next;
+            } else {
+                head.next = list2;
+                list2 = list2.next;
+            }
+            head = head.next;
+        }
+        
+        if (list1 != null) {
+            head.next = list1;
+        } else {
+            head.next = list2;
+        }
+        
+        return dummy.next;
+    }
+}
