@@ -340,7 +340,7 @@ public class LRUCache {
     }
     
     public void setHead(Node n) {
-        n.next = head;
+        n.next = head;//把原来的头结点接到当前点的后边
         n.pre = null;
         
         if(head != null)
