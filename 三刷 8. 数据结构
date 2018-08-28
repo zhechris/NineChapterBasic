@@ -394,3 +394,81 @@ public class Solution {
         return res;
     }
 }
+
+105. Copy List with Random Pointer
+/**
+ * Definition for singly-linked list with a random pointer.
+ * class RandomListNode {
+ *     int label;
+ *     RandomListNode next, random;
+ *     RandomListNode(int x) { this.label = x; }
+ * };
+ */
+public class Solution {
+    /**
+     * @param head: The head of linked list with a random pointer.
+     * @return: A new head of a deep copy of the list.
+     */
+    public RandomListNode copyRandomList(RandomListNode head) {
+        // write your code here
+        if (head == null) {
+            return head;
+        }
+        
+        Map<RandomListNode, RandomListNode> map = new HashMap<>();
+        RandomListNode dummy = new RandomListNode(0);
+        dummy.next = head;
+        
+        //copy node
+        while (head != null) {
+            map.put(head, new RandomListNode(head.label));
+            head = head.next;
+        }
+        head = dummy.next;
+        //copy links
+        while (head != null) {
+            map.get(head).next = map.get(head.next);
+            map.get(head).random = map.get(head.random);
+            head = head.next;
+        }
+        return map.get(dummy.next);
+        
+    }
+}
+**********************************
+遍历map的key value的方法
+/*public static void main(String[] args) {
+
+
+  Map<String, String> map = new HashMap<String, String>();
+  map.put("1", "value1");
+  map.put("2", "value2");
+  map.put("3", "value3");
+  
+  //第一种：普遍使用，二次取值
+  System.out.println("通过Map.keySet遍历key和value：");
+  for (String key : map.keySet()) {
+   System.out.println("key= "+ key + " and value= " + map.get(key));
+  }
+  
+  //第二种
+  System.out.println("通过Map.entrySet使用iterator遍历key和value：");
+  Iterator<Map.Entry<String, String>> it = map.entrySet().iterator();
+  while (it.hasNext()) {
+   Map.Entry<String, String> entry = it.next();
+   System.out.println("key= " + entry.getKey() + " and value= " + entry.getValue());
+  }
+  
+  //第三种：推荐，尤其是容量大时
+  System.out.println("通过Map.entrySet遍历key和value");
+  for (Map.Entry<String, String> entry : map.entrySet()) {
+   System.out.println("key= " + entry.getKey() + " and value= " + entry.getValue());
+  }
+
+  //第四种
+  System.out.println("通过Map.values()遍历所有的value，但不能遍历key");
+  for (String v : map.values()) {
+   System.out.println("value= " + v);
+  }
+ }
+ */
