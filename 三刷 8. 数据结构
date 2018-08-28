@@ -227,3 +227,103 @@ public class Solution {
         return newHashTable;
     }
 }
+
+有点难，不太会还是
+134. LRU Cache
+class Node {
+    int key;
+    int val;
+    Node pre;
+    Node next;
+    Node(int key, int val) {
+        this.key = key;
+        this.val = val;
+    }
+}
+public class LRUCache {
+    /*
+    * @param capacity: An integer
+    */
+    int capacity;
+    Map<Integer, Node> map = new HashMap<>();
+    Node head = null;
+    Node end = null;
+
+    public LRUCache(int capacity) {
+        // do intialization if necessary
+        this.capacity = capacity;
+    }
+
+    /*
+     * @param key: An integer
+     * @return: An integer
+     */
+    public int get(int key) {
+        // write your code here
+        if (map.containsKey(key)) {
+            Node node = map.get(key);
+            remove(node);
+            setHead(node);
+            return node.val;
+        }
+
+        return -1;
+    }
+
+    public void remove(Node node) {
+        //node 是否是头结点
+        if (node.pre != null) {
+            node.pre.next = node.next;
+        } else {
+            head = node.next;
+        }
+
+        //node是否是尾结点
+        if (node.next != null) {
+            node.next.pre = node.pre;
+        } else {
+            end = node.pre;
+        }
+    }
+
+    public void setHead(Node node) {
+        //把原来的头结点接到当前点之后
+        node.next = head;
+        node.pre = null;
+        
+        if (head != null) {
+            head.pre = node;
+        }
+
+        head = node;
+
+        if (end == null) { //没有元素
+            end = head;
+        }
+    }
+
+    /*
+     * @param key: An integer
+     * @param value: An integer
+     * @return: nothing
+     */
+    public void set(int key, int value) {
+        // write your code here
+        if (map.containsKey(key)) {
+            Node old = map.get(key);
+            old.val = value;
+            remove(old);
+            setHead(old);
+        } else {
+            Node created = new Node(key, value);
+            if (map.size() >= capacity) {
+                map.remove(end.key); //key放在node里面的原因
+                remove(end);
+                setHead(created);
+            } else {
+                setHead(created);
+            }    
+            map.put(key, created);
+        }
+    }
+}
