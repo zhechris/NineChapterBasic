@@ -462,3 +462,49 @@ public class Solution {
         return;
     }
 }
+
+思路有
+120. Word Ladder
+public class Solution {
+    /*
+     * @param start: a string
+     * @param end: a string
+     * @param dict: a set of string
+     * @return: An integer
+     */
+    public int ladderLength(String start, String end, Set<String> dict) {
+        // write your code here
+        if (dict.size() == 0)  
+	            return 0; 
+	 
+        LinkedList<String> wordQueue = new LinkedList<String>();
+        //维护每一层的队列，把所有有的情况都添加进队列。
+        LinkedList<Integer> distanceQueue = new LinkedList<Integer>();
+        //dict.add(start);
+        dict.add(end);
+        wordQueue.add(start);
+        distanceQueue.add(1);
+ 
+        while(!wordQueue.isEmpty()){
+            String currWord = wordQueue.pop();
+            Integer currDistance = distanceQueue.pop();
+            if(currWord.equals(end)){
+                return currDistance;
+            }
+            for(int i = 0; i < currWord.length(); i++){
+                char[] currCharArr = currWord.toCharArray();
+                for(char c = 'a'; c <= 'z'; c++){
+                    currCharArr[i] = c;
+ 
+                    String newWord = new String(currCharArr);
+                    if(dict.contains(newWord)){
+                        wordQueue.add(newWord);
+                        distanceQueue.add(currDistance + 1);
+                        dict.remove(newWord);
+                    }
+                }
+            }
+        }
+	    return 0;
+    }
+}
