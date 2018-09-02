@@ -382,3 +382,43 @@ public class Solution {
         return true;
     }
 }
+
+写错了，注意看怎么去重
+135. Combination Sum
+public class Solution {
+    /**
+     * @param candidates: A list of integers
+     * @param target: An integer
+     * @return: A list of lists of integers
+     */
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        // write your code here
+        List<List<Integer>> res = new ArrayList<>();
+        if (candidates == null || candidates.length == 0) {
+            return res;
+        }
+        Arrays.sort(candidates);
+        List<Integer> unit = new ArrayList<>();
+        dfs(candidates, 0, target, res, unit);
+        return res;
+    }
+    
+    public void dfs(int[] candidates, int start, int target, List<List<Integer>> res, List<Integer> unit) {
+        if (target == 0) {
+            res.add(new ArrayList<>(unit));
+            return;
+        }
+        
+        for (int i = start; i < candidates.length; i++) {
+            if (i != start && candidates[i] == candidates[i - 1]) {
+                continue;
+            }
+            if (candidates[i] <= target) {
+                unit.add(candidates[i]);
+                dfs(candidates, i, target - candidates[i], res, unit);
+                unit.remove(unit.size() - 1);
+            }
+        }
+        return;
+    }
+}
