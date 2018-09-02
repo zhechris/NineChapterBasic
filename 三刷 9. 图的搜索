@@ -84,3 +84,61 @@ public class Solution {
         return map.get(dummy.next);
     }
 }
+
+没写出来，要考虑入度
+127. Topological Sorting
+/**
+ * Definition for Directed graph.
+ * class DirectedGraphNode {
+ *     int label;
+ *     ArrayList<DirectedGraphNode> neighbors;
+ *     DirectedGraphNode(int x) { label = x; neighbors = new ArrayList<DirectedGraphNode>(); }
+ * };
+ */
+
+public class Solution {
+    /*
+     * @param graph: A list of Directed graph node
+     * @return: Any topological order for the given graph.
+     */
+    public ArrayList<DirectedGraphNode> topSort(ArrayList<DirectedGraphNode> graph) {
+        // write your code here
+        //edge case
+        if (graph == null) {
+            return null;
+        }
+        Map<DirectedGraphNode, Integer> map = new HashMap<>();
+        //count the in degree
+        for (DirectedGraphNode node : graph) {
+            for (DirectedGraphNode neighbor : node.neighbors) {
+                if (map.containsKey(neighbor)) {
+                    map.put(neighbor, map.get(neighbor) + 1);
+                } else {
+                    map.put(neighbor, 1);
+                }
+            }
+        }
+        
+        ArrayList<DirectedGraphNode> res = new ArrayList<>();
+        Queue<DirectedGraphNode> queue = new LinkedList<>();
+        //add in degree == 0 node
+        for (DirectedGraphNode node : graph) {
+            if (!map.containsKey(node)) {
+                res.add(node);
+                queue.offer(node);
+            }
+        }
+        //find next in degree == 0
+        while (!queue.isEmpty()) {
+            DirectedGraphNode temp = queue.poll();
+            for (DirectedGraphNode neighbor : temp.neighbors) {
+                map.put(neighbor, map.get(neighbor) - 1);
+                if (map.get(neighbor) == 0) {
+                    res.add(neighbor);
+                    queue.add(neighbor);
+                }
+            }
+        }
+        return res; 
+    }
+}
