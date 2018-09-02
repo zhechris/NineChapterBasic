@@ -235,3 +235,61 @@ public class Solution {
         }
     }
 }
+
+不会写
+33. N-Queens
+public class Solution {
+    /*
+     * @param n: The number of queens
+     * @return: All distinct solutions
+     */
+    public List<List<String>> solveNQueens(int n) {
+        // write your code here
+        List<List<String>> res = new ArrayList<>();
+        if (n <= 0) {
+            return res;
+        }
+        
+        int[] colVal = new int[n];
+        dfs(n, res, 0, colVal);
+        return res;
+    }
+    
+    
+    public void dfs(int n, List<List<String>> res, int row, int[] colVal) {
+        if (row == n) {
+            List<String> unit = new ArrayList<>();
+            for (int i = 0; i < n; i++) { // i means the row
+                StringBuilder sb = new StringBuilder();
+                for (int j = 0; j < n; j++) {
+                    
+                    if (colVal[i] == j) {
+                        sb.append('Q');
+                    } else {
+                        sb.append('.');
+                    }
+                }
+                unit.add(sb.toString());
+            }
+            res.add(unit);
+            return;
+        }
+        //一行一行的放
+        for (int i = 0; i < n; i++) {
+            colVal[row] = i;//在当前行把所有的列都尝试一遍
+            if(isValid(row, colVal)) {
+                dfs(n, res, row + 1, colVal);//当前行ok，进行下一行，不ok得话，尝试当前行的下一个点
+            }
+        }
+        return;
+    }
+    public boolean isValid(int row, int[] colVal) {
+        for (int i = 0; i < row; i++) {
+            if (colVal[i] == colVal[row] || Math.abs(colVal[i] - colVal[row]) == Math.abs(row - i)) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+}
