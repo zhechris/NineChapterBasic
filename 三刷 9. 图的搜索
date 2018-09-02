@@ -143,14 +143,6 @@ public class Solution {
     }
 }
 
-求子集，时间复杂度O(2^n) 决策树 画出来就知道了 也可以归纳总结 solve n = 1需要2， solve n = 2需要4
-注意传值和传参的区别
-res.add(new ArrayList<Integer>(list)); 
-            //注意不能用res.add(list) 因为java是pass by value，所以在不停的copy同一个对象的reference
-            //但是这个对象最后是空，所有的reference指向同一个对象。而这个对象最后为空，所以全是空。
-            //但是如果在这中间过程中, new了一个新对象，那么传进去的是新对象的reference，相当于把改变的过程每次都copy一份保存了起来
-            http://www.importnew.com/3559.html
-            
 不能算写出来了，但是至少思路有的
 15. Permutations
 public class Solution {
@@ -191,3 +183,55 @@ public class Solution {
     }
 }
 
+求子集，时间复杂度O(2^n) 决策树 画出来就知道了 也可以归纳总结 solve n = 1需要2， solve n = 2需要4
+注意传值和传参的区别
+res.add(new ArrayList<Integer>(list)); 
+            //注意不能用res.add(list) 因为java是pass by value，所以在不停的copy同一个对象的reference
+            //但是这个对象最后是空，所有的reference指向同一个对象。而这个对象最后为空，所以全是空。
+            //但是如果在这中间过程中, new了一个新对象，那么传进去的是新对象的reference，相当于把改变的过程每次都copy一份保存了起来
+            http://www.importnew.com/3559.html
+17. Subsets
+public class Solution {
+    /**
+     * @param nums: A set of numbers
+     * @return: A list of lists
+     */
+    public List<List<Integer>> subsets(int[] nums) {
+        // write your code here
+        List<List<Integer>> res = new ArrayList<>();
+        
+        if (nums == null) {
+            return res;
+        }
+        
+        if (nums.length == 0) {
+            res.add(new ArrayList<>());
+            return res;
+        }
+        
+        Arrays.sort(nums);
+        int length = 0;
+        int start = 0;
+        List<Integer> list = new ArrayList<>();
+        dfs(nums, res, list, length, start);
+        return res;
+    }
+    
+    public void dfs(int[] nums, List<List<Integer>> res, List<Integer> list, int length, int start) {
+        if (list.size() == length) {
+            res.add(new ArrayList<Integer>(list)); 
+            //不能return，这样的话之后的不会走了，和前一题还不太一样，这个length从0开始增加，前一题length和nums一样。
+            //注意不能用res.add(list) 因为java是pass by value，所以在不停的copy同一个对象的reference
+            //但是这个对象最后是空，所有的reference指向同一个对象。而这个对象最后为空，所以全是空。
+            //但是如果在这中间过程中, new了一个新对象，那么传进去的是新对象的reference，相当于把改变的过程每次都copy一份保存了起来
+            //比如说你在main函数list中添加一个值，那么最后输出永远都是这个值
+        }
+        
+        for(int i = start; i < nums.length; i++){
+            list.add(nums[i]);
+            dfs(nums, res, list, length + 1, i + 1);
+            list.remove(list.size() - 1);
+            
+        }
+    }
+}
