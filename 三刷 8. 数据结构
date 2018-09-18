@@ -542,34 +542,41 @@ public class Solution {
 }
 
 //nlogn version
+/*The basic idea is to maintain two heaps: a max-heap and a min-heap. The max heap stores the smaller half of all numbers while the min heap stores the larger half. The sizes of two heaps need to be balanced each time when a new number is inserted so that their size will not be different by more than 1. Therefore each time when findMedian() is called we check if two heaps have the same size. If they do, we should return the average of the two top values of heaps. Otherwise we return the top of the heap which has one more element. */
 public class Solution {
     /**
      * @param nums: A list of integers
      * @return: the median of numbers
      */
-    PriorityQueue<Integer> maxpq;
-    PriorityQueue<Integer> minpq;
     public int[] medianII(int[] nums) {
         // write your code here
-        minpq = new PriorityQueue<>(nums.length);
-        maxpq = new PriorityQueue<>(nums.length, new Comparator<Integer>(){
-        public int compare(Integer a, Integer b){
+        if (nums == null || nums.length == 0) {
+            return new int[0];
+        }
+        
+        int[] res = new int[nums.length];
+        
+        PriorityQueue<Integer> minpq = new PriorityQueue<>();//higher half
+        PriorityQueue<Integer> maxpq = new PriorityQueue<>(new Comparator<Integer>(){//lower half
+            public int compare(Integer a, Integer b){
                 return b - a;
             }
         });
-        int[] result = new int[nums.length];
-        for(int i = 0; i < nums.length; i++){
+        
+        for (int i = 0; i < nums.length; i++) {
             maxpq.offer(nums[i]);
-            if(maxpq.size() > minpq.size()){
-                minpq.offer(maxpq.poll());
-            }
+            minpq.offer(maxpq.poll());
 
-            if(minpq.size() > maxpq.size()){
+            if (maxpq.size() < minpq.size()) {
                 maxpq.offer(minpq.poll());
             }
-            result[i] = maxpq.peek();
+            if (maxpq.size() == minpq.size()) {
+                res[i] = maxpq.peek(); // Or `(maxHeap.peek() + minHeap.peek())/2`
+            } else {
+                res[i] = maxpq.peek();
+            }
         }
-        return result;
+        return res;
     }
 }
 
